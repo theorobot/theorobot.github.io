@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<h1>Trigonometry for Game Develepment</h1>
+<h2>By: Theo McGee</h2>
+<br>
+<h3>1. Introduction</h3>
+<p>In this project, I explore how trigonometry is used in game development.</p>
+<h3>2. Background Information</h3>
+
+<title>Sine Wave</title>
+<body onload="plotWaves();robotInit()">
+    <h3>Sine, cosine, and tangent waves</h3>
+
+    <canvas id="canvas" width="1000" height="250">
+    <script type="text/javascript">
+	//window.onload = plotWaves; 
+        function showAxes(ctx,axes) {
+            var width = ctx.canvas.width;
+            var height = ctx.canvas.height;
+            var xMin = 0;
+	    
+            ctx.beginPath();
+            ctx.strokeStyle = "rgb(0, 0, 40)";
+            
+            // X-Axis
+            ctx.moveTo(xMin, height/2);
+            ctx.lineTo(width, height/2);
+            
+            // Y-Axis
+            
+            // ctx.moveTo(12, 0);
+            // ctx.lineTo(12, height);
+            
+            // Starting line
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, height);
+            
+            ctx.stroke();
+        }
+        function plotSine(ctx, xOffset, yOffset) {
+            var width = ctx.canvas.width;
+            var height = ctx.canvas.height;
+            var scale = 20;
+
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgb(66,44,255)";
+            
+            var x = 4;
+            var y = 0;
+            var amplitude = 40;
+            var frequency = 20;
+            //ctx.moveTo(x, y);
+            ctx.moveTo(x, 50);
+            while (x < width) {
+                y = height/2 + amplitude * Math.sin((x+xOffset)/frequency);
+                ctx.lineTo(x, y);
+                x++;
+            }
+            ctx.stroke();
+            ctx.save();
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function plotCosine(ctx, xOffset, yOffset) {
+            var width = ctx.canvas.width;
+            var height = ctx.canvas.height;
+            var scale = 20;
+
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgb(255,0,0)";
+
+            var x = 4;
+            var y = 0;
+            var amplitude = 40;
+            var frequency = 20;
+            //ctx.moveTo(x, y);
+            ctx.moveTo(x, 50);
+            while (x < width) {
+                y = height/2 + amplitude * Math.cos((x+xOffset)/frequency);
+                ctx.lineTo(x, y);
+                x++;
+                // console.log("x="+x+" y="+y);
+            }
+            ctx.stroke();
+            ctx.save();
+            ctx.stroke();
+            ctx.restore();
+        }
+        function plotTangent(ctx, xOffset, yOffset) {
+            var width = ctx.canvas.width;
+            var height = ctx.canvas.height;
+            var scale = 100;
+
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgb(10, 180, 20)";
+            
+            var x = 4;
+            var y = 0;
+            var amplitude = 40;
+            var frequency = 20;
+            //ctx.moveTo(x, y);
+            ctx.moveTo(x, 50);
+            while (x < width) {
+                y = height/2 + amplitude * Math.tan((x+xOffset)/frequency);
+                ctx.lineTo(x, y);
+                x++;
+                // console.log("x="+x+" y="+y);
+            }
+            ctx.stroke();
+            ctx.save();
+            ctx.stroke();
+            ctx.restore();
+        }
+        function plotWaves() {
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+       	    var step = -4;
+            context.clearRect(0, 0, 500, 500);
+            showAxes(context);
+            plotSine(context, step, 50);
+            plotCosine(context, step, 0);
+            plotTangent(context, step, 1000);
+        }
+    </script>
+    </canvas>
+
+   
+    <h3>3. Examples of smooth movement using trigonometry</h3>
+    <p>Click to start.</p>
+   
+    <canvas id="myCanvas2" width="720" height = "480">
+      <script>
+
+	// declare global variables
+	let canvas;
+	let context;
+	let image;
+	let x, direction;  // position and direction for robot 1
+	let time;          // timer for robot 2
+	let stop;
+
+	// initialize variables and start game loop
+	function robotInit() {
+	    canvas = document.getElementById("myCanvas2");
+	    context = canvas.getContext("2d");
+            image = new Image();
+	    image.src = "img/Robot.png";
+	    x = 250;
+	    direction = 1;
+	    time = 0;
+	    stop = false;
+	    draw(250, 0);
+            draw(250, 200);
+	    stop = true;
+	    document.addEventListener('click', onclick, false);
+	    window.requestAnimationFrame(gameLoop);
+	}
+
+	// main game loop
+	function gameLoop(timeStamp) {
+	    // draw robot 1: zigzag motion
+	    if (x == 500 | x == 0) {
+		direction *= -1
+            }
+            x += direction * 5;
+	    draw(x, 0);
+
+	    // draw robot 2: sine motion
+	    var x2 = 250 * Math.sin(time * 0.5 * Math.PI) + 250;
+	    time += 0.02;
+            draw(x2, 200);
+
+	    // call next iteraton of game loop
+	    if (!stop) {
+		window.requestAnimationFrame(gameLoop);
+	    }
+	}
+
+	// draw picture
+	function draw(x, y) {
+	    context.drawImage(image, x, y, 300, 200);    
+	}
+
+	// toggle value of "stop" flag on mouse click
+	function onclick(event) {
+	    stop = !stop;
+	    if (!stop) {
+		window.requestAnimationFrame(gameLoop);
+	    }	
+	}
+	
+      </script>
+      </canvas>
+
+
+    
+    
+</body>
+
+</html>
