@@ -27,6 +27,11 @@
 </div>
 
 <div class="slide">
+  <h1> Sine, Cosine, and Tangent Waves </h1>
+  <h1> <img src="img/trig_waves.png"> </h1>
+</div>
+
+<div class="slide">
   <h1>Sine as a Function of Theta</h1>
   <p>The left picture shows theta as it increases from 0 degrees to 360 degrees.</p>
   <p>The right picture shows the sine of theta, the X-axis is theta and the Y-axis is the sine of theta.</p>
@@ -36,8 +41,9 @@
     let canvas1, context1;
     let xoffset, yoffset, y, theta;
     let stop1;
-    let thetaChange;
-    function plotSineInit() {
+     let thetaChange;
+     let period;
+     function plotSineInit() {
       canvas1 = document.getElementById("canvas");
       context1 = canvas1.getContext("2d");
       context1.strokeStyle = "blue";
@@ -45,25 +51,24 @@
       yoffset = 150;
       y = 0;
       theta = 0;
-		  period = 20;
+		  period = 40;
       stop1 = false;
 			showAxis();
-      document.addEventListener('keydown', onPlotClick, false);
+         document.addEventListener('keydown', onPlotClick, false);
       plotLoop();
     }	
-    function plotLoop() {
+     function plotLoop() {
 			context1.beginPath()
       context1.moveTo(xoffset+theta, yoffset-y);
       y = 60 * Math.sin(theta/period);
       context1.lineTo(xoffset+theta, yoffset - y);
       context1.stroke();
 
-			context1.beginPath();
-			context1.arc(80, yoffset, 60, -(theta+1)/period, -(theta)/period);
-			context1.fillStyle = "green";
-			context1.closePath();
-			context1.fill();
-			context1.stroke();
+      context1.beginPath();
+         context1.moveTo(80, yoffset)
+         context1.lineTo(80+60*Math.cos(theta/period), yoffset-60*Math.sin(theta/period))
+         context1.stroke();
+         context1.closePath();
 
       if (!stop1 && theta < Math.PI*2*period) {
         theta += 1;
@@ -77,8 +82,8 @@
       } else  {
         context1.clearRect(0, 0, 720, 360);
         theta = 0;
-				y = 0;
-				showAxis();
+	y = 0;
+	showAxis();
         window.requestAnimationFrame(plotLoop);
       }
     }
@@ -87,7 +92,7 @@
       context1.strokeStyle = "red";
 			context1.beginPath();
 			context1.moveTo(xoffset, yoffset);
-			context1.lineTo(xoffset+180, yoffset);
+			context1.lineTo(xoffset+250, yoffset);
 			context1.stroke();
 			context1.beginPath();
 			context1.moveTo(80, yoffset);
@@ -99,10 +104,6 @@
  </canvas>
 </div>
 
-<div class="slide">
-  <h1> Sine, Cosine, and Tangent Waves </h1>
-  <h1> <img src="img/trig_waves.png"> </h1>
-</div>
 
 <div class="slide">
   <h1>Using Sine Waves to Smooth the Movement of Objects</h1>
@@ -184,8 +185,16 @@
 
 <div class="slide">
  <h1>Using Polar Coordinates for Circular Movement</h1>
-    <p>On a computer screen, a position of an object uses cartesian coordinates(x, y). But if you want circular movement, you can use polar coordinates. Instead of x and y, it is the radius and the angle. In order to represent the position of the object moving in a circular way, you have to translate the polar coordinates to cartesian coordinates. The formula for converting polar coordinates into cartesian coordinates is x = (radius * (cosine(angle)) and y = (radius * (sine(angle)) </p>
-	<p>Press any key to start/stop animation.</p>
+ <ul>
+   <li>On a computer screen, a position of an object uses cartesian coordinates(x, y)</li>
+   <li>Objects with circular movement is more easily described in polar coordinates (radius and the angle</li>
+   <li> You can translate the polar coordinates to cartesian coordinates.</li>
+   <ul>
+   <li>x = radius * cosine(angle)</li>
+     <li>y = radius * sine(angle)</li>
+   </ul>
+   </ul>
+ <p>Press any key to start/stop animation.</p>
   <canvas id="myCanvas3" width="720" height = "640">
     <script>
       let angle, radius;
