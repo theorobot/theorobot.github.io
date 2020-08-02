@@ -1,256 +1,257 @@
 <!DOCTYPE html>
 <html>
-<head></head>
-<body>
-<h1>Trigonometry for Game Develepment</h1>
-<h2>By: Theo McGee</h2>
-<br>
-<h3>1. Introduction</h3>
-<p>In this project, I explore how trigonometry is used in game development.</p>
-<h3>2. Background Information</h3>
+<head>
+  <meta name="trigonometry" content="width=device-width, initial-scale=1">
+  <link href="slides.css" rel="stylesheet" type="text/css" />
+</head>
 
-<title>Sine Wave</title>
-<body onload="plotWaves();robotInit();init()">
-  <h3>Sine, cosine, and tangent waves</h3>
-  <p>This is a graph showing sine, cosine, and tangent waves. The blue wave is sine, the red is cosine the green is tangent, and the gray line is theta (the angle)</p>
+<title>Trigonometry</title>
 
-    <canvas id="canvas" width="1000" height="600">
-    <script type="text/javascript">
-	//window.onload = plotWaves; 
-        function showAxes(ctx,axes) {
-            var width = ctx.canvas.width;
-            var height = ctx.canvas.height;
-            var xMin = 0;
-	    
-            ctx.beginPath();
-            ctx.strokeStyle = "rgb(0, 0, 40)";
-            
-            // X-Axis
-            ctx.moveTo(xMin, height/2);
-            ctx.lineTo(width, height/2);
-            
-            // Y-Axis
-            
-            // ctx.moveTo(12, 0);
-            // ctx.lineTo(12, height);
-            
-            // Starting line
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, height);
-            
-            ctx.stroke();
-        }
-        function plotSine(ctx, xOffset, yOffset) {
-            var width = ctx.canvas.width;
-            var height = ctx.canvas.height;
-            var scale = 20;
+<body onload="plotSineInit();smoothMovementInit();polarInit()">
 
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "rgb(66,44,255)";
-            
-            var x = 4;
-            var y = 0;
-            var amplitude = 40;
-            var frequency = 20;
-            //ctx.moveTo(x, y);
-            ctx.moveTo(x, 50);
-            while (x < width) {
-                y = height/2 + amplitude * Math.sin((x+xOffset)/frequency);
-                ctx.lineTo(x, y);
-                x++;
-            }
-            ctx.stroke();
-            ctx.save();
-            ctx.stroke();
-            ctx.restore();
-        }
+<div class="slideshow-container">
 
-        function plotCosine(ctx, xOffset, yOffset) {
-            var width = ctx.canvas.width;
-            var height = ctx.canvas.height;
-            var scale = 20;
-
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "rgb(255,0,0)";
-
-            var x = 4;
-            var y = 0;
-            var amplitude = 40;
-            var frequency = 20;
-            //ctx.moveTo(x, y);
-            ctx.moveTo(x, 50);
-            while (x < width) {
-                y = height/2 + amplitude * Math.cos((x+xOffset)/frequency);
-                ctx.lineTo(x, y);
-                x++;
-                // console.log("x="+x+" y="+y);
-            }
-            ctx.stroke();
-            ctx.save();
-            ctx.stroke();
-            ctx.restore();
-        }
-        function plotTangent(ctx, xOffset, yOffset) {
-            var width = ctx.canvas.width;
-            var height = ctx.canvas.height;
-            var scale = 100;
-
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "rgb(10, 180, 20)";
-            
-            var x = 4;
-            var y = 0;
-            var amplitude = 40;
-            var frequency = 20;
-            //ctx.moveTo(x, y);
-            ctx.moveTo(x, 50);
-            while (x < width) {
-                y = height/2 + amplitude * Math.tan((x+xOffset)/frequency);
-                ctx.lineTo(x, y);
-                x++;
-                // console.log("x="+x+" y="+y);
-            }
-            ctx.stroke();
-            ctx.save();
-            ctx.stroke();
-            ctx.restore();
-        }
-        function plotWaves() {
-            var canvas = document.getElementById("canvas");
-            var context = canvas.getContext("2d");
-       	    var step = -4;
-            context.clearRect(0, 0, 500, 500);
-            showAxes(context);
-            plotSine(context, step, 50);
-            plotCosine(context, step, 0);
-            plotTangent(context, step, 1000);
-        }
+<div class="slide">
+  <h1>Trigonometry for Game Develepment</h1>
+  <h1>Theo McGee</h1>
+  <canvas id="theoCanvas" width="720" height="300">
+    <script>
+    //No script
     </script>
-    </canvas>
+  </canvas>
+</div>
 
-   
-    <h3>3. Examples of smooth movement using trigonometry</h3>
-	<p>Sine waves are used to control smooth movements of objects.</p>
-	<p>The top robot moves at a constant speed and the movement is not smooth.</p>  
-	<p>The movement of the top robot is controlled by the following code: <br>
-		if (x == 500 | x == 0) {<br>
-		direction *= -1<br>
-		}<br>
-		x += direction * 5;</p>
-	
-	<p>The bottom robot uses a sine wave so it moves faster in the middle and slower near the edges.</p>
-	<p>It is controlled by the following code: <br>
-		var x2 = 250 * Math.sin(time * 0.5 * Math.PI) + 250;<br>
-		time += 0.02;</p>
-   
-    <canvas id="myCanvas2" width="720" height = "480">
-      <script>
+<div class="slide">
+  <h1>Right Angle and Trigonometric Functions</h1>
+   <img src="img/Triangle_picture.png" width="800">
+</div>
 
-	// declare global variables
-	let canvas;
-	let context;
-	let image;
-	let x, direction;  // position and direction for robot 1
-	let time;          // timer for robot 2
-	let stop;
 
-	// initialize variables and start game loop
-	function robotInit() {
-	    canvas = document.getElementById("myCanvas2");
-	    context = canvas.getContext("2d");
-            image = new Image();
-	    image.src = "img/Robot.png";
-	    x = 250;
-	    direction = 1;
-	    time = 0;
-	    stop = false;
-	    draw(250, 0);
-            draw(250, 200);
-	    stop = true;
-	    document.addEventListener('click', onclick, false);
-	    window.requestAnimationFrame(gameLoop);
-	}
+<div class="slide">
+  <h1>Sine as a Function of Theta</h1>
+  <p>The left picture shows theta as it increases from 0 degrees to 360 degrees.</p>
+  <p>The right picture shows the sine of theta, the X-axis is theta and the Y-axis is the sine of theta.</p>
+	<p>Press any key to start/stop animation.</p>
+ <canvas id="canvas" width="720" height="360">
+   <script type="text/javascript">
+    let canvas1, context1;
+    let xoffset, yoffset, y, theta;
+    let stop1;
+     let thetaChange;
+     let period;
+     function plotSineInit() {
+      canvas1 = document.getElementById("canvas");
+      context1 = canvas1.getContext("2d");
+      context1.strokeStyle = "blue";
+      xoffset = 240;
+      yoffset = 150;
+      y = 0;
+      theta = 0;
+		  period = 40;
+      stop1 = false;
+			showAxis();
+         document.addEventListener('keydown', onPlotClick, false);
+      plotLoop();
+    }	
+     function plotLoop() {
+			context1.beginPath()
+      context1.moveTo(xoffset+theta, yoffset-y);
+      y = 60 * Math.sin(theta/period);
+      context1.lineTo(xoffset+theta, yoffset - y);
+      context1.stroke();
 
-	// main game loop
-	function gameLoop(timeStamp) {
-	    // draw robot 1: zigzag motion
-	    if (x == 500 | x == 0) {
-		direction *= -1
-            }
-            x += direction * 5;
-	    draw(x, 0);
+      context1.beginPath();
+         context1.moveTo(80, yoffset)
+         context1.lineTo(80+60*Math.cos(theta/period), yoffset-60*Math.sin(theta/period))
+         context1.stroke();
+         context1.closePath();
 
-	    // draw robot 2: sine motion
-	    var x2 = 250 * Math.sin(time * 0.5 * Math.PI) + 250;
-	    time += 0.02;
-            draw(x2, 200);
-
-	    // call next iteraton of game loop
-	    if (!stop) {
-		window.requestAnimationFrame(gameLoop);
-	    }
-	}
-
-	// draw picture
-	function draw(x, y) {
-	    context.drawImage(image, x, y, 300, 200);    
-	}
-
-	// toggle value of "stop" flag on mouse click
-	function onclick(event) {
-	    stop = !stop;
-	    if (!stop) {
-		window.requestAnimationFrame(gameLoop);
-	    }	
-	}
-	
-      </script>
-      </canvas>
-	
-    <h3>4. Polar Coordinates</h3>
-    <p>On a computer screen, a position of an object uses cartesian coordinates(x, y). But if you want circular movement, you can use polar coordinates. Instead of x and y, it is the radius and the angle. In order to represent the position of the object moving in a circular way, you have to translate the polar coordinates to cartesian coordinates. The formula for converting polar coordinates into cartesian coordinates is x = (radius * (cosine(angle)) and y = (radius * (sine(angle)) </p>
-	<canvas id="myCanvas3" width="720" height = "480">
-	<script>
-		let angle;
-	  let radius;
-	  let canvas3;
-	  let context3;
-	  let image3;
-	  let start;
-
-	
-		function init() {
-	    		canvas3 = document.getElementById("myCanvas3");
-	    		context3 = canvas3.getContext("2d");
-	    		image3 = new Image();
-	    		image3.src = "img/Robot.png";
-	    		angle = 0;
-	    	    radius = 200;
-		    start = false;
-	    		window.requestAnimationFrame(main);
+      if (!stop1 && theta < Math.PI*2*period) {
+        theta += 1;
+        window.requestAnimationFrame(plotLoop);
+      }
+    }
+    function onPlotClick(event) {
+      stop1 = !stop1;
+      if (!stop1) {
+        window.requestAnimationFrame(plotLoop);
+      } else  {
+        context1.clearRect(0, 0, 720, 360);
+        theta = 0;
+	y = 0;
+	showAxis();
+        window.requestAnimationFrame(plotLoop);
+      }
+    }
+		function showAxis() {
+			context1.save();
+      context1.strokeStyle = "red";
+			context1.beginPath();
+			context1.moveTo(xoffset, yoffset);
+			context1.lineTo(xoffset+250, yoffset);
+			context1.stroke();
+			context1.beginPath();
+			context1.moveTo(80, yoffset);
+			context1.lineTo(140, yoffset);
+			context1.stroke();
+			context1.restore();
 		}
-	        function draw3(x, y){
-	                context3.drawImage(image3, x, y, 300, 200)
-	        }
-		function main() {
-	    		angle += 2;
-	    		x3 = 200 + (radius * (Math.cos(angle * Math.PI / 180)))
-	   		y3 = 170 + (radius * (Math.sin(angle * Math.PI / 180)))
-	    		draw3(x3, y3)
-	    		if (angle < 1080) {
-				window.requestAnimationFrame(main);
-	    		}
-		}
-	</script>
-	</canvas>
-		
+   </script>
+ </canvas>
+</div>
+
+<div class="slide">
+  <h1> Sine, Cosine, and Tangent Waves </h1>
+  <h1> <img src="img/trig_waves.png"> </h1>
+</div>
 
 
-    
-    
+<div class="slide">
+  <h1>Using Sine Waves to Smooth the Movement of Objects</h1>
+  <p>Sine waves are used to control smooth movements of objects.</p>
+  <p>The top robot moves at a constant speed and the movement is not smooth.
+  The movement of the top robot is controlled by the following code: </p>
+  <div style="white-space: pre">
+    if (x == 500 | x == 0) {
+      direction *= -1
+    }
+    x += direction * 5;
+  </div>
+	
+  <p>The bottom robot uses a sine wave so it moves faster in the middle and slower near the edges. It is controlled by the following code: </p>
+  <div style="white-space: pre">
+    var x2 = 250 * Math.sin(time * 0.5 * Math.PI) + 250;
+    time += 0.02;
+  </div>
+	<p>Press any key to start/stop animation.</p>
+  <canvas id="myCanvas2" width="720" height = "480">
+    <script>
+      // declare global variables
+      let canvas, context, image;
+      let x, direction;  // position and direction for robot 1
+      let time;          // timer for robot 2
+      let stop;
+
+      // initialize variables and start game loop
+      function smoothMovementInit() {
+        canvas = document.getElementById("myCanvas2");
+        context = canvas.getContext("2d");
+        image = new Image();
+        image.src = "img/Robot.png";
+        x = 250;
+        direction = 1;
+        time = 0;
+        draw(250, 0);
+        draw(250, 200);
+        stop = false;
+      	document.addEventListener('keydown', onClick, false);
+        window.requestAnimationFrame(gameLoop);
+      }
+
+      // main game loop
+      function gameLoop() {
+        // draw robot 1: zigzag motion
+        if (x == 500 | x == 0) {
+              direction *= -1
+        }
+        x += direction * 5;
+        draw(x, 0);
+
+        // draw robot 2: sine motion
+        var x2 = 250 * Math.sin(time * 0.5 * Math.PI) + 250;
+        time += 0.02;
+        draw(x2, 200);
+
+        // call next iteraton of game loop
+        if (!stop) {
+          window.requestAnimationFrame(gameLoop);
+        }
+      }
+
+      // draw picture
+      function draw(x, y) {
+        context.drawImage(image, x, y, 300, 200);    
+      }
+
+      // toggle value of "stop" flag on mouse click
+      function onClick(event) {
+        stop = !stop;
+        if (!stop) {
+          window.requestAnimationFrame(gameLoop);
+        }	
+      }
+    </script>
+  </canvas>
+</div>
+
+<div class="slide">
+ <h1>Using Polar Coordinates for Circular Movement</h1>
+ <ul>
+   <li>On a computer screen, the position of an object uses cartesian coordinates(x, y)</li>
+   <li>Objects with circular movement is more easily described in polar coordinates (radius and the angle)</li>
+   <li> You can translate the polar coordinates to cartesian coordinates.</li>
+   <ul>
+   <li>x = radius * cosine(angle)</li>
+     <li>y = radius * sine(angle)</li>
+   </ul>
+   </ul>
+ <p>Press any key to start/stop animation.</p>
+  <canvas id="myCanvas3" width="720" height = "640">
+    <script>
+      let angle, radius;
+      let canvas3, context3, image3;
+      let stop3;
+	
+      function draw3(x, y){
+        context3.drawImage(image3, x, y, 300, 200)
+      }
+      function polarInit() {
+        canvas3 = document.getElementById("myCanvas3");
+        context3 = canvas3.getContext("2d");
+        image3 = new Image();
+        image3.src = "img/Robot.png";
+        angle = 0;
+        radius = 200;
+        stop3 = false;
+        draw3(200, 170);
+        document.addEventListener('keydown', onPolarClick, false);
+        window.requestAnimationFrame(main);
+      }
+      function main() {
+        angle += 2;
+        x3 = 200 + (radius * (Math.cos(angle * Math.PI / 180)))
+        y3 = 170 + (radius * (Math.sin(angle * Math.PI / 180)))
+        draw3(x3, y3)
+        if (!stop3) {
+          window.requestAnimationFrame(main);
+        }
+      }
+      function onPolarClick(event) {
+        stop3 = !stop3;
+        if (!stop3) {
+          window.requestAnimationFrame(main);
+        }	
+      }
+    </script>
+  </canvas>
+</div>
+
+<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+<a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span> 
+  <span class="dot" onclick="currentSlide(2)"></span> 
+  <span class="dot" onclick="currentSlide(3)"></span> 
+  <span class="dot" onclick="currentSlide(4)"></span> 
+  <span class="dot" onclick="currentSlide(5)"></span> 
+  <span class="dot" onclick="currentSlide(6)"></span> 
+</div>
+
+<script src="slides.js"></script>
+
 </body>
+</html> 
 
-</html>
