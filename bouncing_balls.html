@@ -1,0 +1,131 @@
+<html>
+  <head>
+    <style>
+      * {padding: 0; margin: 0}
+      canvas {background: #eee; display: block; margin: 0 auto;}
+
+    </style>
+  </head>
+  <body>
+    <canvas id="Canvas1d" width="720" height="480">
+      <script>
+	var canvas = document.getElementById("Canvas1d");
+	var ctx = canvas.getContext("2d")
+
+	var distance = 0;
+	var numBalls = 5;
+	var i;
+	let b = [];
+	for (i = 0; i < numBalls; i++) {
+	    var ball = {x: getRndInt(20, 700), y: canvas.height / 2, speed: getRndInt(1, 4), radius: 10};
+	    b.push(ball);
+	}
+	var stop = false;
+	document.addEventListener('click', onclick, false);
+
+	main();
+
+	function getRndInt(min, max) {
+	    return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	function getRndFloat(min, max) {
+	    return (Math.random() * (max - min)) + min;
+	}
+
+	function findDistance(x1, y1, x2, y2) {
+	    return (Math.sqrt((Math.abs((x2 - x1) * (x2 - x1))) + (Math.abs((y2 - y1) * (y2 - y1)))));
+	}
+
+	function randomColor(r, g, b) {
+	    return "rgb("+r+","+g+","+b+")";
+	}
+
+	function drawCircle(x, y, radius, color) {
+	    ctx.beginPath();
+	    ctx.fillStyle = color;
+	    ctx.arc(x, y, radius, 0, Math.PI * 2);
+	    ctx.fill();
+	    ctx.closePath();
+	}
+
+	function checkCollisions() {
+	    for (i = 0; i < numBalls; i++) {	
+		if ((b[i].x > canvas.width - (b[i].radius * 2)) || (b[i].x < (b[i].radius * 2))) {
+		    b[i].speed *= -1;
+		}
+		for (j = (i + 1); j < numBalls; j++) {
+		    distance = findDistance(b[i].x, b[i].y, b[j].x, b[j].y);
+		    if (distance < (b[i].radius + b[j].radius)) {
+			var oldBiSpeed = b[i].speed;
+			b[i].speed = b[j].speed;
+			b[j].speed = oldBiSpeed;
+		    }
+		}
+	    }
+	}
+
+	function main() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	    for (i = 0; i < numBalls; i++) {
+		drawCircle(b[i].x, b[i].y, b[i].radius, b[i].color);
+		b[i].x += b[i].speed;
+	    }
+	    checkCollisions();
+	    window.requestAnimationFrame(main);
+	}
+	
+      </script>
+    </canvas>
+
+    <canvas id="Canvas2d" width="720" height="480">
+      <script>
+	var canvas2 = document.getElementById("Canvas2d");
+
+	var numBalls2 = 20;
+	let balls = [];
+	for (i=0; i < numBalls2; i++) {
+	    ball2 = {x: getRndInt(10, 710), y: getRndInt(20, 460), speed: getRndInt(1, 5), angle: getRndFloat(0, (2 * Math.PI)), radius: 10, color: randomColor(getRndInt(0, 255), getRndInt(0, 255), getRndInt(0, 255))}
+	    balls.push(ball2);
+	}
+	var stop = false;
+	document.addEventListener('click', onclick, false)
+
+	main2();
+
+	function collision2d() {
+	    for (i = 0; i < numBalls2; i++) {
+		if ((balls[i].x) > (canvas.width - (balls[i].radius)) || ((balls[i].x) < (balls[i].radius))) {
+		    balls[i].angle = (Math.PI - (balls[i].angle));
+		}
+		if ((balls[i].y) > (canvas.height - (balls[i].radius)) || ((balls[i].y) < (balls[i].radius))) {
+		    balls[i].angle = (Math.PI - balls[i].angle);
+		    balls[i].speed *= -1;
+		}
+	    }
+	}
+
+	function main2() {
+	    ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+	    if (!stop) {
+		for (i = 0; i < numBalls2; i++) {
+		    drawCircle(balls[i].x, balls[i].y, balls[i].radius, balls[i].color)
+		    balls[i].x += (balls[i].speed*(Math.cos(balls[i].angle)));
+		    balls[i].y += (balls[i].speed*(Math.sin(balls[i].angle)));
+		}
+	    }
+	    collision2d();
+	    window.requestAnimationFrame(main2)
+	}
+
+	function onclick(event) {
+	    stop = !stop;
+	    if (!stop) {
+		window.requestAnimationFrame(main2);
+	    }
+	}
+      </script>
+    </canvas>
+  </body>
+</html>
+
