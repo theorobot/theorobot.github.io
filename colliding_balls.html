@@ -81,7 +81,7 @@
     <canvas id="Canvas2d" width="720" height="480">
       <script type = "text/javascript">
 				let canvas2, ctx2;
-				var numBalls2 = 4;
+				var numBalls2 = 30;
 				let balls = [];
 				let stop2;
         var touched = false;
@@ -169,7 +169,7 @@ console.log(balls[j].speed, radianToDegree(balls[j].angle));
                   		balls[j].y += (balls[j].speed * (Math.sin(balls[j].angle)));
                   		distance = findDistance(balls[i].x, balls[i].y, balls[j].x, balls[j].y)
                 		}
-								   stop2 = !stop2;
+								   // stop2 = !stop2;
 								}
 		    			}
 		  			}
@@ -223,7 +223,18 @@ console.log(balls[j].speed, radianToDegree(balls[j].angle));
 	}
 
 	function getTheta(Vx, Vy) {
-		return Math.atan(Vy / Vx);
+	    if (Vx < 0 && Vy < 0) {
+		return (((Math.PI)) + (Math.atan(Vy / Vx)));
+	    }
+	    else if (Vx > 0 && Vy < 0) {
+		return  (Math.atan(Vy / Vx));
+	    }
+	    else if (Vx < 0 && Vy > 0) {
+		return ((Math.PI) + (Math.atan(Vy / Vx)));
+	    }
+	    else if (Vx > 0 && Vy > 0) {
+		return (Math.atan(Vy / Vx));
+	    }
 	}
 
 	function drawCircle(c, x, y, radius, color) {
@@ -235,7 +246,7 @@ console.log(balls[j].speed, radianToDegree(balls[j].angle));
 	}
 
 	function radianToDegree(rad) {
-		return rad * 180 / Math.Pi;
+	    return rad * (180 / Math.PI);
 	}
 </script>
 </html>
