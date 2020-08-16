@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="trigonometry" content="width=device-width, initial-scale=1">
+  <link href="slides.css" rel="stylesheet" type="text/css" />
+</head>
+
+<title>Trigonometry</title>
+
+<body>
+
+
+  <h1>Sine as a Function of Theta</h1>
+  <p>The left picture shows theta as it increases from 0 degrees to 360 degrees.</p>
+  <p>The right picture shows the sine of theta, the X-axis is theta and the Y-axis is the sine of theta.</p>
+	<p>Press any key to start/stop animation.</p>
+ <canvas id="canvas" width="720" height="360">
+   <script type="text/javascript">
+		var ctx = canvas.getContext('2d');
+		var b = [];
+		for (i = 0 ; i< 2; i++) {
+			var entry = {x : i*20, y : i*30};
+			b.push(entry);
+		}
+			ctx.beginPath();
+			ctx.arc(b[0].x, b[0].y, 10, 0, 2*Math.PI, false);
+      ctx.stroke();
+			ctx.beginPath();
+			ctx.arc(b[1].x, b[1].y, 10, 0, 2*Math.PI, false);
+      ctx.stroke();
+
+   </script>
+ </canvas>
+
+</body>
+</html> 
+

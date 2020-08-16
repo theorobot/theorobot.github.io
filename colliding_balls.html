@@ -1,30 +1,198 @@
 <html>
-  <head>
-    <style>
-      * {padding: 0; margin: 0}
-      canvas {background: #eee; display: block; margin: 0 auto;}
+<head>
+  <style>
+    canvas {background: #eee; display: block; margin: 0 auto;}
+  </style>
+	<link href="slides.css" rel="stylesheet" type="text/css"/>
+</head>
 
-    </style>
-  </head>
-  <body>
-    <canvas id="Canvas1d" width="720" height="480">
-      <script>
-	var canvas = document.getElementById("Canvas1d");
-	var ctx = canvas.getContext("2d")
+<title>Colliding Balls</title>
 
-	var distance = 0;
-	var numBalls = 5;
-	var i;
-	let b = [];
-	for (i = 0; i < numBalls; i++) {
-	    var ball = {x: getRndInt(20, 700), y: canvas.height / 2, speed: getRndInt(1, 4), radius: 10};
-	    b.push(ball);
-	}
-	var stop = false;
-	document.addEventListener('click', onclick, false);
+<body onload="mainInit();main2Init()">
 
-	main();
+<div class = "slideshow-container">
 
+<div class = "slide">
+	<h1>Collision in 1D</h1>
+   	<canvas id="Canvas1d" width="720" height="480">
+      <script type = "text/javascript">
+				let canvas, ctx;
+				var distance = 0;
+				var numBalls = 5;
+				let b = [];
+				let stop;
+
+				function mainInit() {
+					canvas = document.getElementById("Canvas1d");
+				  ctx = canvas.getContext("2d")
+					for (var i = 0; i < numBalls; i++) {
+	    			var ball = {x: getRndInt(20, 700), 
+                        y: canvas.height / 2, 
+                        speed: getRndInt(1, 4), 
+							 					color: randomColor(getRndInt(0, 255), 
+																					 getRndInt(0, 255), 
+                                           getRndInt(0, 255)),
+                        radius: 10};
+	    			b.push(ball);
+					}
+					stop = false;
+					document.addEventListener('click', on1click, false);
+	    	  window.requestAnimationFrame(main);
+				}	
+
+				function main() {
+	    			ctx.clearRect(0, 0, canvas.width, canvas.height);
+	    			for (var i = 0; i < numBalls; i++) {
+							drawCircle(ctx, b[i].x, b[i].y, b[i].radius, b[i].color);
+	    			}
+						if (!stop) {
+	    				for (var i = 0; i < numBalls; i++) {
+								b[i].x += b[i].speed;
+	    					checkCollisions();
+							}
+						}
+	    			window.requestAnimationFrame(main);
+				}
+
+				function checkCollisions() {
+	  			for (var i = 0; i < numBalls; i++) {	
+		  			if ((b[i].x > canvas.width - (b[i].radius * 2)) || 
+          			(b[i].x < (b[i].radius * 2))) {
+		    			b[i].speed *= -1;
+		  			}
+		  			for (j = (i + 1); j < numBalls; j++) {
+		    			distance = findDistance(b[i].x, b[i].y, b[j].x, b[j].y);
+		    			if (distance < (b[i].radius + b[j].radius)) {
+			    			var oldBiSpeed = b[i].speed;
+								b[i].speed = b[j].speed;
+			    			b[j].speed = oldBiSpeed;
+		    			}
+		  			}
+	  			}
+				}
+
+				function on1click(event) { stop = !stop; }
+      </script>
+    </canvas>
+	</div>
+
+	<div class ="slide">
+	<h1>Collision in 2D</h1>
+    <canvas id="Canvas2d" width="720" height="480">
+      <script type = "text/javascript">
+				let canvas2, ctx2;
+				var numBalls2 = 4;
+				let balls = [];
+				let stop2;
+        var touched = false;
+
+				function main2Init() {
+					canvas2 = document.getElementById("Canvas2d");
+				  ctx2 = canvas2.getContext("2d")
+					for (var i=0; i < numBalls2; i++) {
+	    			ball2 = {x: getRndInt(10, 710), 
+							 			 y: getRndInt(20, 460), 
+                     speed: getRndInt(3,3), 
+                     angle: getRndFloat(0, (2 * Math.PI)), 
+                     radius: 10, 
+							       color: randomColor(getRndInt(0, 255), 
+                                        getRndInt(0, 255), 
+                                        getRndInt(0, 255))
+							}
+	    			balls.push(ball2);
+					}
+					stop2 = false;
+					document.addEventListener('click', on2click, false)
+	    		window.requestAnimationFrame(main2);
+				}
+
+				function main2() {
+	  			ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+						for (var i = 0; i < numBalls2; i++) {
+		    			drawCircle(ctx2, balls[i].x, balls[i].y, 
+                         balls[i].radius, balls[i].color)
+						}
+	    			if (!stop2) {
+							for (var i = 0; i < numBalls2; i++) {
+		    				balls[i].x += (balls[i].speed*(Math.cos(balls[i].angle)));
+		    				balls[i].y += (balls[i].speed*(Math.sin(balls[i].angle)));
+							}
+							collision2d();
+	    			}
+	    			window.requestAnimationFrame(main2);
+				}
+
+				function collision2d() {
+	  			for (var i = 0; i < numBalls2; i++) {
+		  		    if (balls[i].x  > canvas.width - balls[i].radius) { 
+		    				balls[i].angle = (Math.PI - (balls[i].angle));
+                balls[i].x = (canvas.width - balls[i].radius)
+		  		    } else if (balls[i].x < balls[i].radius) {
+                 balls[i].angle = (Math.PI - (balls[i].angle))
+                 balls[i].x = (balls[i].radius)
+              } else if (balls[i].y > (canvas.height - (balls[i].radius))) {
+                 balls[i].angle = -balls[i].angle;
+                 balls[i].y = (canvas.height - balls[i].radius)
+							} else if ((balls[i].y) < (balls[i].radius)) {
+		    			    balls[i].angle = -balls[i].angle;
+                  balls[i].y = balls[i].radius;
+		  			  } else { 
+		  					for (var j = i+1; j < numBalls2; j++) {
+		    					distance = findDistance(balls[i].x, balls[i].y, balls[j].x, balls[j].y)
+		    					if (distance < (balls[i].radius + balls[j].radius)) {
+			    					var Phi = Math.atan((balls[j].y - balls[i].y) / (balls[j].x - balls[i].x));
+										var T1 = balls[i].angle;
+										var V1 = balls[i].speed;
+										var T2 = balls[j].angle;
+										var V2 = balls[j].speed;
+										var V1x = V2 * Math.cos(T2 - Phi) * Math.cos(Phi) + 
+            			        		V1 * Math.sin(T1 - Phi) * Math.cos(Phi + (Math.PI / 2));
+										var V1y = V2 * Math.cos(T2 - Phi) * Math.sin(Phi) + 
+                          		V1 * Math.sin(T1 - Phi) * Math.sin(Phi + (Math.PI / 2));
+										var V2x = V1 * Math.cos(T1 - Phi) * Math.cos(Phi) + 
+                          		V2 * Math.sin(T2 - Phi) * Math.cos(Phi + (Math.PI / 2));
+										var V2y = V1 * Math.cos(T1 - Phi) * Math.sin(Phi) + 
+                          		V2 * Math.sin(T2 - Phi) * Math.sin(Phi + (Math.PI / 2));
+console.log(balls[i].speed, radianToDegree(balls[i].angle));
+console.log(balls[j].speed, radianToDegree(balls[j].angle));
+										balls[i].speed = getV(V1x, V1y);
+										balls[i].angle = getTheta(V1x, V1y);
+										balls[j].speed = getV(V2x, V2y);
+					    			balls[j].angle = getTheta(V2x, V2y);
+console.log(balls[i].speed, radianToDegree(balls[i].angle));
+console.log(balls[j].speed, radianToDegree(balls[j].angle));
+                		distance = findDistance(balls[i].x, balls[i].y, balls[j].x, balls[j].y)
+                		while ((distance < (balls[i].radius +  balls[j].radius))) {
+                  		balls[i].x += (balls[i].speed * (Math.cos(balls[i].angle)));
+                  	  balls[i].y += (balls[i].speed * (Math.sin(balls[i].angle)));
+                  		balls[j].x += (balls[j].speed * (Math.cos(balls[j].angle)));
+                  		balls[j].y += (balls[j].speed * (Math.sin(balls[j].angle)));
+                  		distance = findDistance(balls[i].x, balls[i].y, balls[j].x, balls[j].y)
+                		}
+								   stop2 = !stop2;
+								}
+		    			}
+		  			}
+	  			}
+				}
+				function on2click(event) {
+	    		stop2= !stop2;
+				}
+      </script>
+    </canvas>
+	</div>
+	<a class = "prev" onclick = "plusSlides(-1)">&#10094;</a>
+	<a class = "next" onclick = "plusSlides(1)">&#10095;</a>
+</div>
+	
+	<div style = "text-align:center">
+		<span class = "dot" onclick="currentSlide(1)"></span>
+		<span class = "dot" onclick="currentSlide(2)"></span>
+	</div>
+	<script type = "text/javascript" src="slides.js"></script>
+  </body>
+
+<script type = "text/javascript">
 	function getRndInt(min, max) {
 	    return Math.floor(Math.random() * (max - min)) + min;
 	}
@@ -34,148 +202,41 @@
 	}
 
 	function findDistance(x1, y1, x2, y2) {
-	    return (Math.sqrt((Math.abs((x2 - x1) * (x2 - x1))) + (Math.abs((y2 - y1) * (y2 - y1)))));
+	    return (Math.sqrt((Math.abs((x2 - x1) * (x2 - x1))) + 
+                        (Math.abs((y2 - y1) * (y2 - y1)))));
 	}
 
 	function randomColor(r, g, b) {
 	    return "rgb("+r+","+g+","+b+")";
 	}
 
-	function drawCircle(x, y, radius, color) {
-	    ctx.beginPath();
-	    ctx.fillStyle = color;
-	    ctx.arc(x, y, radius, 0, Math.PI * 2);
-	    ctx.fill();
-	    ctx.closePath();
-	}
-
-	function checkCollisions() {
-	    for (i = 0; i < numBalls; i++) {	
-		if ((b[i].x > canvas.width - (b[i].radius * 2)) || (b[i].x < (b[i].radius * 2))) {
-		    b[i].speed *= -1;
-		}
-		for (j = (i + 1); j < numBalls; j++) {
-		    distance = findDistance(b[i].x, b[i].y, b[j].x, b[j].y);
-		    if (distance < (b[i].radius + b[j].radius)) {
-			var oldBiSpeed = b[i].speed;
-			b[i].speed = b[j].speed;
-			b[j].speed = oldBiSpeed;
-		    }
-		}
-	    }
-	}
-
-	function main() {
-	    ctx.clearRect(0, 0, canvas.width, canvas.height);
-	    for (i = 0; i < numBalls; i++) {
-		drawCircle(b[i].x, b[i].y, b[i].radius, b[i].color);
-		b[i].x += b[i].speed;
-	    }
-	    checkCollisions();
-	    window.requestAnimationFrame(main);
-	}
-	
-      </script>
-    </canvas>
-
-    <canvas id="Canvas2d" width="720" height="480">
-      <script>
-	var canvas2 = document.getElementById("Canvas2d");
-
-	var numBalls2 = 25;
-	let balls = [];
-	for (i=0; i < numBalls2; i++) {
-	    ball2 = {x: getRndInt(10, 710), y: getRndInt(20, 460), speed: getRndInt(3,3), angle: getRndFloat(0, (2 * Math.PI)), radius: 10, color: randomColor(getRndInt(0, 255), getRndInt(0, 255), getRndInt(0, 255))}
-	    balls.push(ball2);
-	}
-	var stop = false;
-	document.addEventListener('click', onclick, false)
-
-	main2();
-
 	function getVx(speed, angle) {
-	    var Vx = (speed * Math.cos(angle));
-	    return Vx;
+		return speed * Math.cos(angle);
 	}
 
 	function getVy(speed, angle) {
-	    var Vy = (speed * Math.sin(angle));
-	    return Vy;
+		return speed * Math.sin(angle);
 	}
 
 	function getV(Vx, Vy) {
-	    var v = (Math.sqrt(Math.abs((Vx * Vx) + (Vy * Vy))));
-	    return v;
+		return Math.sqrt((Vx * Vx) + (Vy * Vy));
 	}
 
 	function getTheta(Vx, Vy) {
-	    var theta = (Math.atan(Vy / Vx));
-	    return theta;
+		return Math.atan(Vy / Vx);
 	}
 
-	function rotate(speed, rotationAngle) {
-	    var speedr = (speed * (Math.cos(rotationAngle)));
-	    return speedr;
+	function drawCircle(c, x, y, radius, color) {
+	    c.beginPath();
+	    c.fillStyle = color;
+	    c.arc(x, y, radius, 0, Math.PI * 2);
+	    c.fill();
+	    c.closePath();
 	}
 
-	function collision2d() {
-	    for (i = 0; i < numBalls2; i++) {
-		if ((balls[i].x) > (canvas.width - (balls[i].radius)) || ((balls[i].x) < (balls[i].radius))) {
-		    balls[i].angle = (Math.PI - (balls[i].angle));
-		}
-		if ((balls[i].y) > (canvas.height - (balls[i].radius)) || ((balls[i].y) < (balls[i].radius))) {
-		    // balls[i].angle = ((Math.PI * (3 / 2)) + (balls[i].angle));
-		    balls[i].angle = -balls[i].angle;
-		    // balls[i].speed *= -1;
-		}
-		for (j = i+1; j < numBalls2; j++) {
-		    distance = findDistance(balls[i].x, balls[i].y, balls[j].x, balls[j].y)
-		    if (distance < (balls[i].radius + balls[j].radius)) {
-			var angleOfCollision = Math.atan((Math.abs(balls[i].y - balls[j].y)) / (Math.abs(balls[i].x - balls[j].x)));
-			var T1 = balls[i].angle;
-			var V1 = balls[i].speed;
-			var T2 = balls[j].angle;
-			var V2 = balls[j].angle;
-			var Phi = angleOfCollision;
-			var V1x = V2 * Math.cos(T2 - Phi) * Math.cos(Phi) + V1 * Math.sin(T1 - Phi) * Math.cos(Phi + Math.PI / 2);
-			var V1y = V2 * Math.cos(T2 - Phi) * Math.sin(Phi) + V1 * Math.sin(T1 - Phi) * Math.sin(Phi + Math.PI / 2);
-			var V2x = V1 * Math.cos(T1 - Phi) * Math.cos(Phi) + V2 * Math.sin(T2 - Phi) * Math.cos(Phi + Math.PI / 2);
-			var V2y = V1 * Math.cos(T1 - Phi) * Math.sin(Phi) + V2 * Math.sin(T2 - Phi) * Math.sin(Phi + Math.PI / 2);
-			console.log(balls[i].speed)
-			console.log(balls[j].speed)
-			balls[i].speed = getV(V1x, V1y);
-			balls[i].angle = getTheta(V1x, V1y);
-			balls[j].speed = getV(V2x, V2y);
-			balls[j].angle = getTheta(V2x, V2y);
-			console.log(balls[i].speed)
-			console.log(balls[j].speed)
-			stop = !stop;
-		    }
-		}
-	    }
+	function radianToDegree(rad) {
+		return rad * 180 / Math.Pi;
 	}
-
-	function main2() {
-	    ctx.clearRect(0, 0, canvas2.width, canvas2.height);
-	    if (!stop) {
-		for (i = 0; i < numBalls2; i++) {
-		    drawCircle(balls[i].x, balls[i].y, balls[i].radius, balls[i].color)
-		    balls[i].x += (balls[i].speed*(Math.cos(balls[i].angle)));
-		    balls[i].y += (balls[i].speed*(Math.sin(balls[i].angle)));
-		}
-		collision2d();
-	    }
-	    window.requestAnimationFrame(main2)
-	}
-
-	function onclick(event) {
-	    stop = !stop;
-	    if (!stop) {
-		// window.requestAnimationFrame(main2);
-	    }
-	}
-      </script>
-    </canvas>
-  </body>
+</script>
 </html>
 
