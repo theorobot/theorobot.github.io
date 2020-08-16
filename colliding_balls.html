@@ -153,14 +153,14 @@
                           		V2 * Math.sin(T2 - Phi) * Math.cos(Phi + (Math.PI / 2));
 										var V2y = V1 * Math.cos(T1 - Phi) * Math.sin(Phi) + 
                           		V2 * Math.sin(T2 - Phi) * Math.sin(Phi + (Math.PI / 2));
-console.log(balls[i].speed, radianToDegree(balls[i].angle));
-console.log(balls[j].speed, radianToDegree(balls[j].angle));
+
+
 										balls[i].speed = getV(V1x, V1y);
 										balls[i].angle = getTheta(V1x, V1y);
 										balls[j].speed = getV(V2x, V2y);
 					    			balls[j].angle = getTheta(V2x, V2y);
-console.log(balls[i].speed, radianToDegree(balls[i].angle));
-console.log(balls[j].speed, radianToDegree(balls[j].angle));
+
+
                 		distance = findDistance(balls[i].x, balls[i].y, balls[j].x, balls[j].y)
                 		while ((distance < (balls[i].radius +  balls[j].radius))) {
                   		balls[i].x += (balls[i].speed * (Math.cos(balls[i].angle)));
