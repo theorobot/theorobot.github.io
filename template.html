@@ -1,0 +1,97 @@
+<html>
+<head>
+  <style>
+    canvas {background: #eee; margin: 10 auto;}
+  </style>
+	<link href="slides.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<title>Title</title>
+
+<body onload="canvas1Init()">
+
+<div class = "slideshow-container">
+
+  <div class = "slide">
+   	<h1>Title</h1>
+	  <h1>Theo McGee</h1>
+	  <h1>Date</h1>
+  </div>
+
+  <!-------- cut and paste this part for slides with animations ----->
+  <div class = "slide">
+	  <h1>Heading</h1>
+   	<canvas id="Canvas1" width="720" height="480">
+      <script type = "text/javascript">
+				// global variables for canvas 1
+				let canvas1, ctx1;
+				let stop1;
+
+				// initialize global variables
+				function canvas1Init() {
+					canvas1 = document.getElementById("canvas1");
+				  ctx1 = canvas.getContext("2d")
+
+					stop1 = false;
+					document.addEventListener('click', on1click, false);
+	    	  window.requestAnimationFrame(main1);
+				}	
+
+			  // main game loop for canvas 1
+				function main1() {
+					// draw current frame
+	    		ctx1.clearRect(0, 0, canvas.width, canvas.height);
+
+					// update variables for next frame
+					if (!stop) {
+					}
+
+					// request next frame
+	    		window.requestAnimationFrame(main1);
+				}
+
+				function on1click(event) { stop1 = !stop1; }
+      </script>
+    </canvas>
+	</div>
+  <!-------- end animation slide  -------->
+
+	<a class = "prev" onclick = "plusSlides(-1)">&#10094;</a>
+	<a class = "next" onclick = "plusSlides(1)">&#10095;</a>
+</div>
+	
+	<div style = "text-align:center">
+		<span class = "dot" onclick="currentSlide(1)"></span>
+		<span class = "dot" onclick="currentSlide(2)"></span>
+	</div>
+</body>
+
+<!-- Put shared javacript functions here -->
+<script type = "text/javascript">
+	function getRndInt(min, max) {
+	    return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	function getRndFloat(min, max) {
+	    return (Math.random() * (max - min)) + min;
+	}
+
+	function randomColor(r, g, b) {
+	    return "rgb("+r+","+g+","+b+")";
+	}
+
+	function drawCircle(c, x, y, radius, color) {
+	    c.beginPath();
+	    c.fillStyle = color;
+	    c.arc(x, y, radius, 0, Math.PI * 2);
+	    c.fill();
+	    c.closePath();
+	}
+
+	function radianToDegree(rad) {
+	    return rad * (180 / Math.PI);
+	}
+</script>
+<script type = "text/javascript" src="slides.js"></script>
+</html>
+
