@@ -1,7 +1,7 @@
 <html>
 <head>
   <style>
-    canvas {background: #eee; display: block; margin: 0 auto;}
+    canvas {background: #eee;  margin: 10 auto;}
   </style>
 	<link href="slides.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -10,10 +10,25 @@
 
 <body onload="mainInit();main2Init()">
 
-<div class = "slideshow-container">
+  <div class = "slideshow-container">
+
+<div class="slide">
+  <h1>Elastic Collision</h1>
+  <h1>Theo McGee</h1>
+  <h2>8/17/2020</h2>
+</div>
+
 
 <div class = "slide">
-	<h1>Collision in 1D</h1>
+  <h1>Collision in 1D</h1>
+  <ul>
+    <li>Kinetic energy of a moving object = 1/2mv^2</li>
+    <li>Momentum of a moving object = mv</li>
+    <li>m = mass of the object, v = the velocity of the object</li>
+    <li>In elastic collision, both the kinetic energy and the momentum of the system are conserved (the total is the same before and after the collision)</li>
+    <li>If the mass of the objects are the same, the equations can be simplified: two colliding objects exchange velocity with each other.</li>
+    </ul>
+    
    	<canvas id="Canvas1d" width="720" height="480">
       <script type = "text/javascript">
 				let canvas, ctx;
@@ -77,7 +92,15 @@
 	</div>
 
 	<div class ="slide">
-	<h1>Collision in 2D</h1>
+	  <h1>Collision in 2D</h1>
+	  <ul>
+	    <li>In 2d, you can figure out if two objects are colliding by using the Pythagorus Theorum to find the distance between the center of the two balls.</li>
+	    <li>You can use arctangent to find the angle of the axis of collision.</li>
+	    <li>You can then decompose the velocity vector into two components: 1 parallel to the axis of collision, the other perpendicular.</li>
+	    <li>You can exchange the velocity components parallel to the axis of collision of the two balls that are colliding just like in the 1d problem. The perpindicular component does not change.</li>
+	    <li>After that, you can find the new speed and the new angle of the two colliding balls.</li>
+	    <li>You can find the math that I used by looking at the code by right clicking and then clicking inspect.</li>
+	  </ul>
     <canvas id="Canvas2d" width="720" height="480">
       <script type = "text/javascript">
 				let canvas2, ctx2;
@@ -188,6 +211,7 @@
 	<div style = "text-align:center">
 		<span class = "dot" onclick="currentSlide(1)"></span>
 		<span class = "dot" onclick="currentSlide(2)"></span>
+		<span class = "dot" onclick="currentSlide(3)"></span>
 	</div>
 	<script type = "text/javascript" src="slides.js"></script>
   </body>
