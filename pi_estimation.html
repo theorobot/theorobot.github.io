@@ -16,6 +16,7 @@
    	<h1>Estimating PI Using Monte Carlo Simulation</h1>
 	  <h1>Theo McGee</h1>
 	  <h1>8/22/2020</h1>
+		<p style="margin-bottom:400px;"></p>
   </div>
 
     <!-------- cut and paste this part for slides with animations ----->
@@ -25,7 +26,6 @@
       <script type = "text/javascript">
 				// global variables for canvas 1
 				let canvas1, ctx1;
-	let start1;
 	let bucket;
 	let times;
 	let iteration;
@@ -34,14 +34,12 @@
 				function canvas1Init() {
 				    canvas1 = document.getElementById("Canvas1");
 				    ctx1 = canvas1.getContext("2d")
-
-				    start1 = false;
 				    bucket = [];
-				    times = 1000;
+				    times = 100000;
 				    initBuckets();
 				    iteration = 0;
-				    // document.addEventListener('click', on1click, false);
-	    			    window.requestAnimationFrame(main1);
+				    canvas1.addEventListener('click', on1click, false);
+	    			//window.requestAnimationFrame(main1);
 				}
 
 	function initBuckets() {
@@ -52,64 +50,40 @@
 
 			  // main game loop for canvas 1
 				function main1() {
-				    // draw current frame
-	    			    ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-				        var i = getRndInt(0, 100);
-					if (i < 10) {
-					    bucket[0]++;
-					}
-					else if(i < 20) {
-					    bucket[1]++;
-					}
-					else if (i < 30) {
-					    bucket[2]++;
-					}
-					else if(i < 40) {
-					    bucket[3]++;
-					}
-					else if(i < 50) {
-					    bucket[4]++;
-					}
-					else if(i < 60) {
-					    bucket[5]++;
-					}
-					else if(i < 70) {
-					    bucket[6]++;
-					}
-					else if(i < 80) {
-					    bucket[7]++;
-					}
-					else if(i < 90) {
-					    bucket[8]++;
-					}
-					else if(i < 100) {
-					    bucket[9]++;
-					}
+				  // draw current frame
+	    		ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
 
-				    // console.log(bucket);
+					for (k = 0; k < 500; k++) {
+				  	var i = getRndFloat(0, 100);
+						var index = Math.floor(i / 10); 	
+						bucket[index]++;
+				    iteration++
+					}
 
 				    for (j = 0; j < 10; j++) {
 					ctx1.beginPath();
 					ctx1.fillStyle = "rgba(0, 0, 255, 0.5)"
 					ctx1.strokeStyle = "rgba(0, 0, 0, 1)"
-					ctx1.rect(j * canvas1.width / 10, canvas1.height - bucket[j] * 3.5, canvas1.width / 10, 1000);
+					ctx1.rect(j * canvas1.width / 10, canvas1.height - bucket[j]/30, 
+										canvas1.width / 10, 1000);
 					ctx1.fill();
 					ctx1.stroke();
 					ctx1.closePath();
 				    }
 
 				    // update variables for next frame
-				    iteration++
-				    if (!start1) {
-					}
-
+		
 				    // request next frame
 				    if (iteration < times) {
 	    				window.requestAnimationFrame(main1);
 				    }
 				}
 
-				// function on1click(event) { stop1 = !stop1; }
+				function on1click(event) { 
+					initBuckets(); 
+					iteration = 0;
+	    		window.requestAnimationFrame(main1);
+				}
       </script>
     </canvas>
 	</div>
@@ -122,60 +96,59 @@
       <script type = "text/javascript">
 				// global variables for canvas 1
 				let canvas2, ctx2;
-	let stop1;
-	let count;
+				let count, max, iter;
+			  let start2;
 
 				// initialize global variables
 				function canvas2Init() {
 					canvas2 = document.getElementById("canvas2");
-				    ctx2 = canvas2.getContext("2d")
-				    count = 0;
-
-					stop1 = false;
-					// document.addEventListener('click', on1click, false);
-	    	  window.requestAnimationFrame(main2);
+				  ctx2 = canvas2.getContext("2d")
+					iter = 0;
+				  count = 0;
+					start2 = false;
+					max = 300000;
+					canvas2.addEventListener('click', onclick2, false);
 				}	
 
 			  // main game loop for canvas 1
 				function main2() {
-					// draw current frame
-	    			    ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-				    ctx2.font = "16px Arial";
+				 if (start2) {
+				  for (i = 0; i < 10000; i++) {
+				   iter++;
+				  	var x = getRndFloat(0, 400);
+				  	var y = getRndFloat(0, 400);
+				  	var distance = Math.sqrt(Math.pow(x, 2) + (Math.pow(y, 2)))
+				  	if (distance < 400) {
+				   		drawCircle(ctx2, x, y, 0.1, "rgba(0, 0, 200, 1)");
+				  	} else {
+				    	drawCircle(ctx2, x, y, 0.1, "rgba(200, 0, 0, 1)");
+				  	}
+						if (distance < 400) {
+							count++;
+						}
+					}
+					ctx2.fillStyle = "rgba(0, 0, 0, 1)";
+					ctx2.fillText(iter + "   " + count / (iter / 4), 420, 20 * (iter / 14000) + 20);
+
+				// request next frame
+				if (iter < max) {
+					window.requestAnimationFrame(main2);
+				}	
+			}
+			}
+
+				function onclick2(event) { 
+					start2 = !start2;
+					if (start2) { 
+						iter = 0;
+						count = 0;
+	    	  	ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+				    ctx2.font = "12px Arial";
 				    ctx2.fillStyle = "rgba(0, 0, 0, 1)";
 				    ctx2.fillText("     N" + "      " + "estimated PI", 420, 20 );
-
-				    for (i = 0; i < 200000; i++) {
-					var x = getRndFloat(0, 400);
-					var y = getRndFloat(0, 400);
-					var distance = Math.sqrt(Math.pow(x, 2) + (Math.pow(y, 2)))
-					if (distance < 400) {
-					    drawCircle(ctx2, x, y, 0.1, "rgba(0, 0, 200, 1)");
+	    	  	window.requestAnimationFrame(main2);
 					}
-					else {
-					    drawCircle(ctx2, x, y, 0.1, "rgba(200, 0, 0, 1)");
-					}
-					// console.log(distance);
-					if (distance < 400) {
-					    count++;
-					}
-					if ((i % 10000 == 0) && i > 0) {
-					    // console.log(i, count / (i / 4));
-					    ctx2.fillStyle = "rgba(0, 0, 0, 1)";
-					    ctx2.fillText(i + "   " + count / (i / 4), 420, 20 * (i / 10000) + 20);
-					}
-				    }
-				    // console.log(count / (500000 / 4));
-				    // console.log("test")
-
-					// update variables for next frame
-					if (!stop) {
-					}
-
-					// request next frame
-	    		// window.requestAnimationFrame(main2);
 				}
-
-				// function on1click(event) { stop1 = !stop1; }
       </script>
     </canvas>
 	</div>
@@ -217,9 +190,6 @@
 	    c.closePath();
 	}
 
-	function radianToDegree(rad) {
-	    return rad * (180 / Math.PI);
-	}
 </script>
 <script type = "text/javascript" src="slides.js"></script>
 </html>

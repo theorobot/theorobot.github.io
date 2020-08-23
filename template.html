@@ -16,6 +16,7 @@
    	<h1>Title</h1>
 	  <h1>Theo McGee</h1>
 	  <h1>Date</h1>
+I		<p style="margin-bottom:400px;"></p>
   </div>
 
   <!-------- cut and paste this part for slides with animations ----->
@@ -31,19 +32,18 @@
 				function canvas1Init() {
 					canvas1 = document.getElementById("canvas1");
 				  ctx1 = canvas.getContext("2d")
-
 					stop1 = false;
-					document.addEventListener('click', on1click, false);
+					canvas1.addEventListener('click', on1click, false);
 	    	  window.requestAnimationFrame(main1);
 				}	
 
 			  // main game loop for canvas 1
 				function main1() {
 					// draw current frame
-	    		ctx1.clearRect(0, 0, canvas.width, canvas.height);
+	    		ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
 
 					// update variables for next frame
-					if (!stop) {
+					if (!stop1) {
 					}
 
 					// request next frame
