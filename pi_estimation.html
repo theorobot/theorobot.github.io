@@ -106,14 +106,14 @@
 					iter = 0;
 				  count = 0;
 					start2 = false;
-					max = 300000;
+					max = 500000;
 					canvas2.addEventListener('click', onclick2, false);
 				}	
 
 			  // main game loop for canvas 1
 				function main2() {
 				 if (start2) {
-				  for (i = 0; i < 10000; i++) {
+				  for (i = 0; i < 20000; i++) {
 				   iter++;
 				  	var x = getRndFloat(0, 400);
 				  	var y = getRndFloat(0, 400);
@@ -128,7 +128,7 @@
 						}
 					}
 					ctx2.fillStyle = "rgba(0, 0, 0, 1)";
-					ctx2.fillText(iter + "   " + count / (iter / 4), 420, 20 * (iter / 14000) + 20);
+					ctx2.fillText(iter + "   " + count / (iter / 4), 420, 20 * (iter /2000) + 20);
 
 				// request next frame
 				if (iter < max) {
