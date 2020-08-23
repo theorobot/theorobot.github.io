@@ -1,3 +1,5 @@
+
+
 <html>
 <head>
   <style>
@@ -6,14 +8,14 @@
 	<link href="slides.css" rel="stylesheet" type="text/css"/>
 </head>
 
-<title>Estimating PI</title>
+<title>Estimating Pi</title>
 
 <body onload="canvas1Init(); canvas2Init()">
 
 <div class = "slideshow-container">
 
   <div class = "slide">
-   	<h1>Estimating PI Using Monte Carlo Simulation</h1>
+   	<h1>Estimating Pi Using Monte Carlo Simulation</h1>
 	  <h1>Theo McGee</h1>
 	  <h1>8/22/2020</h1>
 		<p style="margin-bottom:400px;"></p>
@@ -21,7 +23,14 @@
 
     <!-------- cut and paste this part for slides with animations ----->
   <div class = "slide">
-	  <h1>Heading</h1>
+    <h1>Generating Random Numbers</h1>
+    <ul>
+      <li>I am testing if the random number generator in javascript is good because if it isn't, the estimation for Pi won't be accurate</li>
+      <li>I generated 100,000 numbers between 0 and 100 using the javascript Math.random function.</li>
+      <li>Afterwards, I put the numbers into ten buckets. The first bucket holds numbers 0 - 10, the second 11 - 20, the third 21 - 30...</li>
+      <li>I expect that each bucket will be about the same height.</li>
+    </ul>
+    <h3>Click on canvas to start simulation</h3>
    	<canvas id="Canvas1" width="720" height="480">
       <script type = "text/javascript">
 				// global variables for canvas 1
@@ -77,6 +86,11 @@
 				    if (iteration < times) {
 	    				window.requestAnimationFrame(main1);
 				    }
+				    else {
+					ctx1.font = "24px Arial"
+					ctx1.fillStyle = "rgba(0, 0, 0, 1)";
+					ctx1.fillText("Good, the random numbers are uniformly distributed", 50, 40)
+				    }
 				}
 
 				function on1click(event) { 
@@ -91,7 +105,16 @@
 
   <!-------- cut and paste this part for slides with animations ----->
   <div class = "slide">
-	  <h1>Heading</h1>
+    <h1>Estimating Pi using Monte Carlo simulation</h1>
+    <ul>
+      <li>A Monte Carlo simulation uses random inputs to obtain results</li>
+      <li>I generated 500000 random points in the square and detected how far away they are from the top left corner.</li>
+      <li> number of points < r from origin /  total number of points = (1/4*Pi*r^2) / r^2</li>
+			      <li>Therefore, we can estimate Pi from the number of points in the quarter circle.</li>
+			      <li>The estimation is pretty close to Pi after the simulation.</li>
+			      <li>I expected the estimation to be closer to Pi as I generate more points but this is not always the case. I do not know why.</li>
+    </ul>
+    <h3>Click on the canvas to start simulation</h3>
    	<canvas id="canvas2" width="720" height="480">
       <script type = "text/javascript">
 				// global variables for canvas 1
