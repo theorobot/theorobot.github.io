@@ -133,9 +133,11 @@
 				// request next frame
 				if (iter < max) {
 					window.requestAnimationFrame(main2);
-				}	
+				} else {
+					start2 = false;
+				}
 			}
-			}
+		}
 
 				function onclick2(event) { 
 					start2 = !start2;
