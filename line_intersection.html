@@ -1,0 +1,201 @@
+<html>
+  <head>
+    <title>Detecting Line Intersection</title>
+  </head>
+  <body>
+    <h1>Detecting Line Intersection</h1>
+    <ul>
+      <li>In this project, I solve the problem of detecting if two line segments touch each other</li>
+      <li>This is useful when you want to make a video game and you want to detect if two objects touch, and those objects are lines or are made up of lines.</li>
+      <li>My solution has two steps:</li>
+    <ul>
+      <li>Step 1: I assume that both lines are infinitely long, and I find the point of intersection.<br>
+      Given a line segment with end points (x1, y1) and (x2, y2), we can express the equation of the line as y = mx + b, where m is the slope of the line which is equal to (y2 - y1) / (x2 - x1), and b is the y-intercept and is equal to y1 - mx1. Once you find the equation for two line segments, you can find their intersection point by solving for x and y.</li>
+      <li>Step 2: I check if the point of intersection is on both line segments.
+	<br>
+      To figure out if a point is on a line segment, you can use the pythagorous theorom to find the distance between the point and both of the end points of the line segment. Then, you add both of the distances together and see if that is equal to the distance of one end point to the other. If it is, the point is on the line.</li>
+    </ul>
+    </ul>
+<h3>Drag the balls to change the position of the lines. The line segments turn green to indicate they intersect.</h3>
+	
+    <canvas id="myCanvas"  width="720" height="480">
+      <script>
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+
+	var positions = [];
+	var lines = [];
+	var balls = 8;
+	var mouseDown = false;
+	var mouseX = 0;
+	var mouseY = 0;
+	var i;
+	var j;
+
+	for(i=0; i < balls; i++) {
+	    var ballProperties = {x: getRndInt(50, c.width - 50), y: getRndInt(50, c.height - 50), radius: 20, dragged: false, slope: 0}
+	    positions.push(ballProperties);
+	}
+	
+	document.addEventListener('mousemove', mouseMoveHandler, false);
+	document.addEventListener('mousedown', onClick, false);
+	document.addEventListener('mouseup', notClick, false);
+
+	drawBeginning();
+
+	function findDistance(x1, y1, x2, y2) {
+	    return(Math.sqrt(((y2 - y1) * (y2 - y1)) + ((x2 - x1) * (x2 - x1))));
+	}
+
+	function getRndInt(min, max) {
+	    return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	function findSlope(x1, y1, x2, y2) {
+	    return((y2 - y1) / (x2 - x1));
+	}
+
+	function dotOnLine(dotX, dotY, x1, y1, x2, y2) {
+	    if(Math.ceil(findDistance(dotX, dotY, x1, y1) + findDistance(dotX, dotY, x2, y2)) === Math.ceil(findDistance(x1, y1, x2, y2))) {
+		return true
+	    }
+	    else{
+		return false
+	    }
+	}
+
+	function findB(x, y, m) {
+	    return(y - m * x);
+	}
+
+	function findLines() {
+	    lines = []
+	    for(i = 0; i < balls / 2; i++) {
+		var lineProperties = {touching: false, alreadyTouched: false};
+		lines.push(lineProperties);
+	    }
+	}
+
+	function checkCollisions() {
+	    for(i = 0; i < lines.length; i++) {
+		lines[i].touching = false;
+		lines[i].alreadyTouched = false;
+	    }
+	    for(i = 0; i < lines.length * 2; i += 2) {
+		for(j = i + 2; j < lines.length * 2; j += 2) {
+		    var m1 = ((positions[i + 1].y - positions[i].y) / (positions[i + 1].x - positions[i].x))
+		    var m2 = ((positions[j + 1].y - positions[j].y) / (positions[j + 1].x - positions[j].x))
+		    var c1 = (positions[i].y - (m1 * positions[i].x))
+		    var c2 = (positions[j].y - (m2 * positions[j].x))
+		    var collisionX = ((c2 - c1) / (m1 - m2))
+		    var collisionY = (c1 + (m1 * collisionX))
+		    if(dotOnLine(collisionX, collisionY, positions[i].x, positions[i].y, positions[i + 1].x, positions[i + 1].y) && dotOnLine(collisionX, collisionY, positions[j].x, positions[j].y, positions[j + 1].x, positions[j + 1].y)) {
+			lines[i / 2].touching = true;
+			lines[j / 2].touching = true;
+			lines[i / 2].alreadyTouched = true;
+			lines[j / 2].alreadyTouched = true;
+		    }
+		    else {
+			if(!(lines[i / 2].alreadyTouched)) {
+			    lines[i / 2].touching = false;
+			}
+			if(!(lines[j / 2].alreadyTouched)) {
+			    lines[j / 2].touching = false;
+			}
+		    }
+		}
+	    }
+	}
+	
+	function mouseMoveHandler(e) {
+	    var rect = c.getBoundingClientRect()
+	    mouseX = e.clientX
+	    mouseY = (e.clientY - rect.top) * c.height / rect.height;
+	    for(i = 0; i < balls; i++) {
+		if(mouseDown && (findDistance(mouseX, mouseY, positions[i].x, positions[i].y) < positions[i].radius)) {
+		    positions[i].dragged = true;
+		}
+		if(positions[i].dragged && !mouseDown) {
+		    positions[i].dragged = false;
+		}
+	    }
+	    var oneDragged = false;
+	    for(i = 0; i < balls; i++) {
+		if(positions[i].dragged) {
+		    if(!oneDragged) {
+			oneDragged = true;
+		    }
+		    else {
+			positions[i].dragged = false;
+		    }
+		}
+	    }
+	    draw();
+	}
+
+	function drawLines() {
+	    for(i = 0; i < balls; i += 2) {
+		if(lines[i / 2].touching) {
+		    ctx.beginPath();
+		    ctx.strokeStyle = "rgba(0, 255, 0, 1)"
+		    ctx.moveTo(positions[i].x, positions[i].y);
+		    ctx.lineTo(positions[i + 1].x, positions[i + 1].y);
+		    ctx.stroke();
+		    ctx.closePath();
+		}
+		else {
+		    ctx.beginPath();
+		    ctx.strokeStyle = "rgba(255, 0, 0, 1)"
+		    ctx.moveTo(positions[i].x, positions[i].y);
+		    ctx.lineTo(positions[i + 1].x, positions[i + 1].y);
+		    ctx.stroke();
+		    ctx.closePath();
+		}
+	    }
+	}
+
+	function drawBeginning() {
+	    findLines();
+	    checkCollisions();
+	    ctx.clearRect(0, 0, c.width, c.height);
+	    for(i = 0; i < balls; i++) {
+		ctx.beginPath();
+		ctx.arc(positions[i].x, positions[i].y, positions[i].radius, 0, Math.PI * 2)
+		ctx.fill();
+		ctx.font = "16px Georgia";
+		ctx.fillText(i + 1, positions[i].x, positions[i].y - 30)
+		ctx.closePath();
+	    }
+	    drawLines();
+	}
+
+	function draw() {
+	    ctx.clearRect(0, 0, c.width, c.height)
+	    for(i = 0; i < balls; i++) {
+		if(positions[i].dragged) {
+		    positions[i].x = mouseX;
+		    positions[i].y = mouseY;
+		}
+		ctx.beginPath();
+		ctx.arc(positions[i].x, positions[i].y, positions[i].radius, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.font = "16px Georgia";
+		ctx.fillText(i + 1, positions[i].x, positions[i].y - 30)
+		ctx.closePath();
+	    }
+	    drawLines();
+	    checkCollisions();
+	}
+
+	function onClick() {
+	    mouseDown = true;
+	}
+
+	function notClick() {
+	    mouseDown = false;
+	}
+      </script>
+     </canvas>
+  </body>
+</html>
+
