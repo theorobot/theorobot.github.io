@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>Bezier Curve</title>
+    <ul>
+      <li>This project is showing how to draw a Bezier curve on a computer screen.</li>
+      <li>Bezier curves allow you to control what your curve looks like by changing the positions of the control points.</li>
+      <li>The formula for a four-point Bezier Curve is: x = t^3*x1 + 3*t(1-t)^2*x2+3*t^2*(1-t)*x3+t^3*x4 and y = t^3*y1 + 3*t(1-t)^2*y2+3*t^2*(1-t)*y3+t^3*y4</li>
+      <ul>
+	<li>(x1, y1), (x2, y2), (x3, y3), and (x4, y4) are the control points.</li>
+	<li>t goes from 0 - 1 at an increment of 0.01.</li>
+	<li>Each point on the Bezier Curve is a linear combination of the poisitions of the four control points.</li>
+	</ul>
+    </ul>
+    <h3>Drag the points to change the shape of the Bezier Curve.</h3>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="720" height="480">
+      <script>
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+
+	var points = []
+	var numPoints = 4
+	var i;
+	var mouseDown = false;
+	var mouseX = 0
+	var mouseY = 0
+
+	document.addEventListener('mousemove', mouseMovementHandler, false);
+	document.addEventListener('mousedown', onClick, false);
+	document.addEventListener('mouseup', notClick, false);
+
+	for(i = 0; i < numPoints; i++) {
+	    var pointProperties = {x: getRndInt(20, canvas.width - 20), y: getRndInt(20, canvas.height - 20), dragged: false}
+	    points.push(pointProperties)
+	}
+	draw();
+
+	function getRndInt(min, max) {
+	    return(Math.floor(Math.random() * (max - min)) + min)
+	}
+
+	function findDistance(x1, y1, x2, y2) {
+	    return(Math.sqrt((Math.pow(x2 - x1, 2)) + (Math.pow(y2 - y1, 2))));
+	}
+	    
+	function drawBezier(x1, y1, x2, y2, x3, y3, x4, y4) {
+	    var t = 0;
+	    var Bx = (Math.pow(1 - t, 3) * x1 + 3 * t * (Math.pow(1 - t, 2)) * x2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * x3 + (Math.pow(t, 3)) * x4)
+	    var By = (Math.pow(1 - t, 3) * y1 + 3 * t * (Math.pow(1 - t, 2)) * y2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * y3 + (Math.pow(t, 3)) * y4)
+	    for(t = 0; t < 1; t += 0.01) {
+		var oldX = Bx;
+		var oldY = By;
+		Bx = (Math.pow(1 - t, 3) * x1 + 3 * t * (Math.pow(1 - t, 2)) * x2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * x3 + (Math.pow(t, 3)) * x4);
+		By = (Math.pow(1 - t, 3) * y1 + 3 * t * (Math.pow(1 - t, 2)) * y2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * y3 + (Math.pow(t, 3)) * y4);
+		ctx.beginPath();
+		ctx.moveTo(oldX, oldY)
+		ctx.lineTo(Bx, By)
+		ctx.stroke();
+		ctx.closePath();
+	    }
+	}
+
+	function draw() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height)
+	    for(i = 0; i < numPoints; i++) {
+		if(points[i].dragged) {
+		    points[i].x = mouseX
+		    points[i].y = mouseY
+		}
+	    }
+	    drawBezier(points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y)
+	    for(i = 0; i < numPoints; i++) {
+		ctx.beginPath();
+		ctx.arc(points[i].x, points[i].y, 20, 0, Math.PI * 2)
+		ctx.fill();
+		ctx.closePath();
+	    }
+	}
+
+	function mouseMovementHandler(e) {
+	    var rect = canvas.getBoundingClientRect()
+	    mouseX = e.clientX
+	    mouseY = (e.clientY - rect.top) * canvas.height / rect.height;
+	    for(var j = 0; j < numPoints; j++) {
+		if(!mouseDown) {
+		    points[j].dragged = false;
+		}
+	    }
+	    var alreadyDragged = false;
+	    for(j = 0; j < numPoints; j++) {
+		if(mouseDown && findDistance(mouseX, mouseY, points[j].x, points[j].y) < 20) {
+		    points[j].dragged = true;
+		}
+		if(points[j].dragged && !mouseDown) {
+		    points[j].dragged = false;
+		}
+	    }
+	    for(j = 0; j < numPoints; j++) {
+		if(points[j].dragged) {
+		    if(!alreadyDragged) {
+			alreadyDragged = true;
+		    }
+		    else {
+			points[j].dragged = false
+		    }
+		}
+	    }
+	    draw();
+	}
+
+	function onClick() {
+	    mouseDown = true;
+	}
+
+	function notClick() {
+	    mouseDown = false;
+	}
+      </script>
+    </canvas>
+  </body>
+</html>
+
+	    
