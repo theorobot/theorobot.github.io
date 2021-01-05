@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Fractal Tree</title>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="960" height="720">
+      <script>
+	var canvas = document.getElementById("myCanvas")
+	var ctx = canvas.getContext("2d")
+
+	var line = []
+	var branches = []
+	var i = 0
+
+	initiate()
+
+	function getRndInt(min, max) {
+	    return (Math.random() * (max - min)) + min
+	}
+
+	function Line(x1, y1, x2, y2, width) {
+	    ctx.lineWidth = width
+	    ctx.moveTo(x1, y1)
+	    ctx.lineTo(x2, y2)
+	    ctx.stroke()
+	}
+
+	function drawLine(x1, y1, x2, y2, width) {
+	    Line(x1, y1, x2, y2, width)
+	}
+	
+	function initiate() {
+	    for(i = 0; i < 50; i++) {
+		makeBranch(getRndInt(50, canvas.width - 50), getRndInt(600, 700), getRndInt(50, 300), 270)
+	    }
+	}
+
+	function makeBranch(startx, starty, length, angle) {
+	    var x2 = startx + length * Math.cos(angle * Math.PI / 180)
+	    var y2 = starty + length * Math.sin(angle * Math.PI / 180)
+	    drawLine(startx, starty, x2, y2, 1)
+	    if(length > 30) {
+		makeBranch(x2, y2, length / 2, angle - getRndInt(55, 5))
+	    }
+	    if(length > 30) {
+		makeBranch(x2, y2, length / 2, angle + getRndInt(5, 55))
+	    }
+	    if(length > 50) {
+		makeBranch(x2, y2, length / 2, angle + getRndInt(-40, -10))
+	    }
+	    if(length > 50) {
+		makeBranch(x2, y2, length / 2, angle + getRndInt(40, 10))
+	    }
+	    if(length > 100) {
+		makeBranch(x2, y2, length / 2, angle + getRndInt(-20, 20))
+	    }
+	}
+      </script>
+    </canvas>
+  </body>
+</html>
