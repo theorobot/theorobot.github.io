@@ -20,7 +20,7 @@
 
   function getRndGreen() {
     let color = '#00'
-    let green = Math.floor(getRndInt(100, 200))
+    let green = Math.floor(getRndInt(20, 220))
     color += green.toString(16)
     color += '00'
     return color
@@ -50,19 +50,19 @@
 	    var y2 = starty + length * Math.sin(angle * Math.PI / 180)
 	    drawLine(startx, starty, x2, y2, length / 50, color)
       color = getRndGreen() 
-	    if(length > 20) {
+	    if(length > getRndInt(10, 20)) {
 		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle - getRndInt(55, 5),  color)
 	    }
-	    if(length > 20) {
+	    if(length > getRndInt(10, 20)) {
 		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(5, 55),  color)
 	    }
-	    if(length > 50) {
+	    if(length > getRndInt(30, 60)) {
 		   setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(-40, -10),  color)
 	    }
-	    if(length > 50) {
+	    if(length > getRndInt(30, 60)) {
 		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(40, 10),  color)
 	    }
-	    if(length > 100) {
+	    if(length > getRndInt(80, 120)) {
 		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(-20, 20),  '#591200')
 	    } 
 	}
