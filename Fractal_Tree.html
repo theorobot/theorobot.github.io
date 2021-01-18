@@ -18,42 +18,53 @@
 	    return (Math.random() * (max - min)) + min
 	}
 
-	function Line(x1, y1, x2, y2, width) {
+  function getRndGreen() {
+    let color = '#00'
+    let green = Math.floor(getRndInt(100, 200))
+    color += green.toString(16)
+    color += '00'
+    return color
+  }
+
+	function Line(x1, y1, x2, y2, width, color) {
+      ctx.beginPath()
 	    ctx.lineWidth = width
 	    ctx.moveTo(x1, y1)
 	    ctx.lineTo(x2, y2)
+      ctx.strokeStyle = color 
 	    ctx.stroke()
 	}
 
-	function drawLine(x1, y1, x2, y2, width) {
-	    Line(x1, y1, x2, y2, width)
+	function drawLine(x1, y1, x2, y2, width, color) {
+	    Line(x1, y1, x2, y2, width, color)
 	}
 	
 	function initiate() {
-	    for(i = 0; i < 50; i++) {
-		makeBranch(getRndInt(50, canvas.width - 50), getRndInt(600, 700), getRndInt(50, 300), 270)
+	    for(i = 0; i < 150; i++) {
+		makeBranch(getRndInt(50, canvas.width - 50), getRndInt(600, 700), getRndInt(50, 300), 270, '#380b00')
 	    }
 	}
 
-	function makeBranch(startx, starty, length, angle) {
+	function makeBranch(startx, starty, length, angle, color) {
 	    var x2 = startx + length * Math.cos(angle * Math.PI / 180)
 	    var y2 = starty + length * Math.sin(angle * Math.PI / 180)
-	    drawLine(startx, starty, x2, y2, 1)
-	    if(length > 30) {
-		setTimeout(makeBranch, 50, x2, y2, length / 2, angle - getRndInt(55, 5))
+	    drawLine(startx, starty, x2, y2, length / 50, color)
+      color = getRndGreen() 
+	    if(length > 20) {
+		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle - getRndInt(55, 5),  color)
 	    }
-	    if(length > 30) {
-		setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(5, 55))
-	    }
-	    if(length > 50) {
-		setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(-40, -10))
+	    if(length > 20) {
+		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(5, 55),  color)
 	    }
 	    if(length > 50) {
-		setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(40, 10))
+		   setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(-40, -10),  color)
+	    }
+	    if(length > 50) {
+		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(40, 10),  color)
 	    }
 	    if(length > 100) {
-		setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(-20, 20))
-	    }
+		    setTimeout(makeBranch, 50, x2, y2, length / 2, angle + getRndInt(-20, 20),  '#591200')
+	    } 
 	}
       </script>
     </canvas>
