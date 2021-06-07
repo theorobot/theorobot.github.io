@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <title>Cellular Automota</title>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="720" height="640">
+      <script>
+	var canvas = document.getElementById("myCanvas")
+	var ctx = canvas.getContext("2d")
+
+	var num = 50
+	var size = 10
+
+	var cells = []
+
+	var i = 0
+	var j = 0
+	var k = 0
+
+	for(i = 0; i < num * num; i++) {
+	    var addToCells = {x: i % num, y: Math.floor(i / num), state: 0}
+	    cells.push(addToCells)
+	}
+
+	for(i = 0; i < 150; i++) {
+	    cells[getRndInt(0, num * num - 1)].state = 1 
+	}
+	    
+	start()
+
+	function getRndInt(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min
+	}
+
+	function xyToCell(x, y) {
+	    return(x + num * y)
+	}
+
+	function drawLine(x1, y1, x2, y2) {
+	    ctx.beginPath()
+	    ctx.moveTo(x1, y1)
+	    ctx.lineTo(x2, y2)
+	    ctx.stroke()
+	    ctx.closePath()
+	}
+
+	function drawGridSquare(x, y) {
+	    drawLine(x * size, y * size, (x + 1) * size, y * size)
+	    drawLine((x + 1) * size, y * size, (x + 1) * size, (y + 1) * size)
+	    drawLine((x + 1) * size, (y + 1) * size, x * size, (y + 1) * size)
+	    drawLine(x * size, (y + 1) * size, x * size , y * size)
+	}
+
+	function drawAliveSquare(x, y) {
+	    ctx.beginPath()
+	    ctx.rect(x * size, y * size, size, size)
+	    ctx.fill()
+	    ctx.closePath()
+	}
+
+	function drawGrid() {
+	    for(i = 0; i < cells.length; i++) {
+		drawGridSquare(cells[i].x, cells[i].y)
+	    }
+	}
+
+	function drawAlive() {
+	    for(i = 0; i < cells.length; i++) {
+		if(cells[i].state == 1) {
+		    drawAliveSquare(cells[i].x, cells[i].y)
+		}
+	    }
+	}
+
+	function draw() {
+	    ctx.clearRect(0, 0, canvas.width, canvas.height)
+	    console.log(cells)
+	    drawAlive()
+	    drawGrid()
+	}
+
+	function findNewAlive() {
+	    var nextCount = 0
+	    for(i = 0; i < cells.length; i++) {
+		if(cells[i].state == 0) {
+		    nextToCount = 0
+		    for(j = -1; j < 2; j++) {
+			for(k = -1; k < 2; k++) {
+			    if((cells[i].x + j < num && cells[i].x + j > 0) && (cells[i].y + k < num && cells[i].y + k > 0)) {
+				if(cells[xyToCell(cells[i].x + j, cells[i].y + k)].state == 1) {
+				    nextToCount++
+				}
+			    }
+			}
+		    }
+		    if(nextToCount == 3) {
+			cells[i].state = 1
+		    }
+		}
+	    }
+	}
+
+	function findNewDead() {
+	    var nextToCount = -1
+	    var times = 0
+	    for(i = 0; i < cells.length; i++) {
+		if(cells[i].state == 1) {
+		    nextToCount = -1
+		    times++
+		    for(j = -1; j < 2; j++) {
+			for(k = -1; k < 2; k++) {
+			    if((cells[i].x + j < num && cells[i].x + j > 0) && (cells[i].y + k < num && cells[i].y + k > 0)) {
+				if(cells[xyToCell(cells[i].x + j, cells[i].y + k)].state == 1) {
+				    nextToCount++
+				}
+				console.log(cells[i].x + j, cells[i].y + k)
+			    }
+			}
+		    }
+		    console.log(nextToCount)
+		    if(nextToCount != 2 && nextToCount != 3) {
+			cells[i].state = 0
+		    }
+		}
+	    }
+	    console.log(cells)
+	}
+
+	function start() {
+	    draw()
+	    setTimeout(main, 1)
+	}
+
+	function main() {
+	    draw()
+	    findNewAlive()
+	    findNewDead()
+	    draw()
+	    setTimeout(main, 1)
+	}
+      </script>
+    </canvas>
+  </body>
+</html>
