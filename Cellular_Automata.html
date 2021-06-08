@@ -86,10 +86,8 @@
 		    nextToCount = 0
 		    for(j = -1; j < 2; j++) {
 			for(k = -1; k < 2; k++) {
-			    if((cells[i].x + j < num && cells[i].x + j > 0) && (cells[i].y + k < num && cells[i].y + k > 0)) {
-				if(cells[xyToCell(cells[i].x + j, cells[i].y + k)].state == 1) {
-				    nextToCount++
-				}
+			  if(cells[xyToCell((cells[i].x + j + num) % num, (cells[i].y + k + num) % num)].state == 1) {
+				nextToCount++
 			    }
 			}
 		    }
@@ -109,12 +107,9 @@
 		    times++
 		    for(j = -1; j < 2; j++) {
 			for(k = -1; k < 2; k++) {
-			    if((cells[i].x + j < num && cells[i].x + j > 0) && (cells[i].y + k < num && cells[i].y + k > 0)) {
-				if(cells[xyToCell(cells[i].x + j, cells[i].y + k)].state == 1) {
+				if(cells[xyToCell((cells[i].x + j + num) % num, (cells[i].y + k + num) % num)].state == 1) {
 				    nextToCount++
 				}
-				console.log(cells[i].x + j, cells[i].y + k)
-			    }
 			}
 		    }
 		    console.log(nextToCount)
