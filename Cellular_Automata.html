@@ -4,7 +4,7 @@
   </head>
   <body>
     <canvas id="myCanvas" width="720" height="640">
-      <script>
+      <script type = "text/javascript">
 	var canvas = document.getElementById("myCanvas")
 	var ctx = canvas.getContext("2d")
 
@@ -17,12 +17,14 @@
 	var j = 0
 	var k = 0
 
+  let stop;
+
 	for(i = 0; i < num * num; i++) {
 	    var addToCells = {x: i % num, y: Math.floor(i / num), state: 0}
 	    cells.push(addToCells)
 	}
 
-	for(i = 0; i < 30; i++) {
+	for(i = 0; i < 100; i++) {
 	    cells[getRndInt(0, num * num - 1)].state = 1 
 	}
 	    
@@ -72,6 +74,7 @@
 	    }
 	}
 
+
 	function draw() {
 	    ctx.clearRect(0, 0, canvas.width, canvas.height)
 	    drawAlive()
@@ -117,20 +120,25 @@
 		}
 	    }
 	}
-
 	function start() {
 	    draw()
-	    setTimeout(main, 1)
+      stop = false;
+      document.addEventListener('keydown', onClick, false);
+      window.requestAnimationFrame(main);
 	}
 
-	function main() {
-	    draw()
-	    findNewAlive()
-	    findNewDead()
-	    draw()
-	    setTimeout(main, 1)
+	async function main() {
+      if (!stop) {
+	      findNewAlive()
+	      findNewDead()
+        await draw()
+      }
+      //window.requestAnimationFrame(main);
+      setTimeout(main, 100)
 	}
+  function onClick(event) { stop = !stop; }
       </script>
+
     </canvas>
   </body>
 </html>
