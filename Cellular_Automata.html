@@ -12,6 +12,7 @@
 	var size = 10
 
 	var cells = []
+	var cellsNext = []
 
 	var i = 0
 	var j = 0
@@ -21,11 +22,13 @@
 
 	for(i = 0; i < num * num; i++) {
 	    var addToCells = {x: i % num, y: Math.floor(i / num), state: 0}
+	    var addToCellsNext = {x: i % num, y: Math.floor(i / num), state: 0}
 	    cells.push(addToCells)
+	    cellsNext.push(addToCellsNext)
 	}
 
-	for(i = 0; i < 100; i++) {
-	    cells[getRndInt(0, num * num - 1)].state = 1 
+	for(i = 0; i < 200; i++) {
+	    cellsNext[getRndInt(0, num * num - 1)].state = 1 
 	}
 	    
 	start()
@@ -81,7 +84,7 @@
 	    drawGrid()
 	}
 
-	function findNewAlive() {
+function findNewAlive() {
 	    var nextCount = 0
 	    for(i = 0; i < cells.length; i++) {
 		if(cells[i].state == 0) {
@@ -94,13 +97,13 @@
 			}
 		    }
 		    if(nextToCount == 3) {
-			cells[i].state = 1
+			cellsNext[i].state = 1
 		    }
 		}
 	    }
 	}
 
-	function findNewDead() {
+function findNewDead() {
 	    var nextToCount = -1
 	    var times = 0
 	    for(i = 0; i < cells.length; i++) {
@@ -115,12 +118,15 @@
 			}
 		    }
 		    if(nextToCount != 2 && nextToCount != 3) {
-			cells[i].state = 0
+			cellsNext[i].state = 0
 		    }
 		}
 	    }
 	}
 	function start() {
+	    for(i = 0; i < cells.length; i++) {
+        cells[i].state = cellsNext[i].state
+      }
 	    draw()
       stop = false;
       document.addEventListener('keydown', onClick, false);
@@ -129,8 +135,11 @@
 
 	async function main() {
       if (!stop) {
-	      findNewAlive()
-	      findNewDead()
+	      await findNewAlive()
+	      await findNewDead()
+	    for(i = 0; i < cells.length; i++) {
+        cells[i].state = cellsNext[i].state
+      }
         await draw()
       }
       //window.requestAnimationFrame(main);
