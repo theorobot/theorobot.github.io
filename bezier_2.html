@@ -6,14 +6,18 @@
       <li>The formula for a 4-point Bezier Curve is the parametric function B(t) = (1-t)^3*p0+t(1-t)^2*p1
 	+t^2*(1-t)*p2 + t^3*p3 where t goes from 0 to 1.
       </li>
-      <li>The derivative of a 4-point Bezier curve is B'(t) = 2(1-t)(p1 - p0)
+      <li>The derivative of a 4-point Bezier curve is B'(t) = 3(1-t)^2(p1-p0) + 6(1-t)t(p2-p1)+3t^2(p3-p2)
 	+2t(p2 - p1).
       </li>
-      <li>The second derivative of a 4-point Bezier curve is B''(t) = 2(p2 - 2*p1 + p0).
+      <li>The second derivative of a 4-point Bezier curve is B''(t) = 6(1-t)(p2-2p1+p0)+6t(p3-2p2+p1) 
       </li>
-      <li>If I want to interpolate between the end point of a Bezier Curve B_a and a new point b, the first and second derivatives of the curves must be the same because we want the curve to be smooth. Therefore, B'_a(1) = B'_b(0) and B''_a(1) = B''_b(0).
+      <li>If I want to interpolate between the end point of a Bezier Curve B_a and a new point b with a new
+          curve B_b, the first and second derivatives of the curves must be the same where they meet 
+          because we want the curve to be smooth. 
+          Therefore, B'_a(1) = B'_b(0) and B''_a(1) = B''_b(0).
       </li>
-      <li>Solving the equations above gives P_b1 = 2 * P_a3 - P_a2, P_b2 = P_a1 - 4 * P_a2 + 4 * P_a3
+      <li>Solving the equations above gives P_b1 = 2 * P_a3 - P_a2, P_b2 = P_a1 - 4 * P_a2 + 4 * P_a3, 
+          where Pb_1 and Pb_2 are the control points of the new curve B_b
       </li>
     </ul>
     <h3>Drag the points to change the shape of the Bezier Curve.</h3>
