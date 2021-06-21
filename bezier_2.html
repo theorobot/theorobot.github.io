@@ -1,10 +1,20 @@
 <html>
   <head>
-    <title>Interpolating a Bezier Curve </title>
+    <title>Bezier Interpolation</title>
     <ul>
-      <li>In this exercise I show how to interpolate between a Bezier curve and 
-          a point </li>
-	</ul>
+      <li>In this exercise I show how to interpolate points using Bezier curves.</li>
+      <li>The formula for a 4-point Bezier Curve is the parametric function B(t) = (1-t)^3*p0+t(1-t)^2*p1
+	+t^2*(1-t)*p2 + t^3*p3 where t goes from 0 to 1.
+      </li>
+      <li>The derivative of a 4-point Bezier curve is B'(t) = 2(1-t)(p1 - p0)
+	+2t(p2 - p1).
+      </li>
+      <li>The second derivative of a 4-point Bezier curve is B''(t) = 2(p2 - 2*p1 + p0).
+      </li>
+      <li>If I want to interpolate between the end point of a Bezier Curve B_a and a new point b, the first and second derivatives of the curves must be the same because we want the curve to be smooth. Therefore, B'_a(1) = B'_b(0) and B''_a(1) = B''_b(0).
+      </li>
+      <li>Solving the equations above gives P_b1 = 2 * P_a3 - P_a2, P_b2 = P_a1 - 4 * P_a2 + 4 * P_a3
+      </li>
     </ul>
     <h3>Drag the points to change the shape of the Bezier Curve.</h3>
   </head>
@@ -15,7 +25,7 @@
 	var ctx = canvas.getContext("2d");
 
 	var points = []
-	var numPoints = 5
+	var num = 6
 	var i;
 	var mouseDown = false;
 	var mouseX = 0
@@ -25,8 +35,8 @@
 	document.addEventListener('mousedown', onClick, false);
 	document.addEventListener('mouseup', notClick, false);
 
-	for(i = 0; i < numPoints; i++) {
-	    var pointProperties = {x: getRndInt(20, canvas.width - 20), y: getRndInt(20, canvas.height - 20), dragged: false}
+	for(i = 0; i < num; i++) {
+	    var pointProperties = {x: 50 * i + 20, y: 50, dragged: false}
 	    points.push(pointProperties)
 	}
 	draw();
@@ -43,7 +53,7 @@
 	    var t = 0;
 	    var Bx = (Math.pow(1 - t, 3) * x1 + 3 * t * (Math.pow(1 - t, 2)) * x2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * x3 + (Math.pow(t, 3)) * x4)
 	    var By = (Math.pow(1 - t, 3) * y1 + 3 * t * (Math.pow(1 - t, 2)) * y2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * y3 + (Math.pow(t, 3)) * y4)
-	    for(t = 0; t < 1; t += 0.01) {
+	    for(t = 0; t < 1.01; t += 0.01) {
 		var oldX = Bx;
 		var oldY = By;
 		Bx = (Math.pow(1 - t, 3) * x1 + 3 * t * (Math.pow(1 - t, 2)) * x2 + ((3 * (Math.pow(t, 2))) * (1 - t)) * x3 + (Math.pow(t, 3)) * x4);
@@ -58,7 +68,7 @@
 
 	function draw() {
 	    ctx.clearRect(0, 0, canvas.width, canvas.height)
-	    for(i = 0; i < numPoints; i++) {
+	    for(i = 0; i < num; i++) {
 		if(points[i].dragged) {
 		    points[i].x = mouseX
 		    points[i].y = mouseY
@@ -66,34 +76,54 @@
 	    }
      ctx.strokeStyle = "#000000" 
 	    drawBezier(points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y, points[3].x, points[3].y)
-	    for(i = 0; i < numPoints; i++) {
+	    for(i = 0; i < num; i++) {
 		ctx.beginPath();
 		ctx.arc(points[i].x, points[i].y, 20, 0, Math.PI * 2)
-    ctx.stroke();
-          ctx.fillText(i, points[i].x, points[i].y);
+		ctx.stroke();
+		
+		if(i == 0) {
+		    ctx.fillText(0, points[i].x, points[i].y)
+		}
+		if(i == 1) {
+		    ctx.fillText("a", points[i].x, points[i].y)
+		}
+		if(i == 2) {
+		    ctx.fillText("b", points[i].x, points[i].y)
+		}
+		if(i >= 3) {
+		    ctx.fillText(i - 2, points[i].x, points[i].y)
+		}
 	    }
-
-     // draw second bezier curve
-     b1x = 2 * points[3].x - points[2].x
-     b1y = 2 * points[3].y - points[2].y
-     b2x = points[1].x - 4 * points[2].x + 4 * points[3].x 
-     b2y = points[1].y - 4 * points[2].y + 4 * points[3].y 
-     ctx.strokeStyle = "#ff0000" 
-     drawBezier(points[3].x, points[3].y, b1x, b1y, b2x, b2y, 
-                points[4].x, points[4].y)
+	    b1x = points[1].x
+	    b1y = points[1].y
+	    b2x = points[2].x
+	    b2y = points[2].y
+	    for(i = 3; i < num - 1; i++) {
+		b1xn = 2 * points[i].x - b2x
+		b1yn = 2 * points[i].y - b2y
+		b2xn = b1x - 4 * b2x + 4 * points[i].x
+		b2yn = b1y - 4 * b2y + 4 * points[i].y
+		drawBezier(points[i].x, points[i].y, b1xn, b1yn, b2xn, b2yn, points[i + 1].x, points[i + 1].y)
+		console.log(i)
+		b1x = b1xn
+		b1y = b1yn
+		b2x = b2xn
+		b2y = b2yn
+		
+	    }
 	}
 
 	function mouseMovementHandler(e) {
 	    var rect = canvas.getBoundingClientRect()
 	    mouseX = e.clientX
 	    mouseY = (e.clientY - rect.top) * canvas.height / rect.height;
-	    for(var j = 0; j < numPoints; j++) {
+	    for(var j = 0; j < num; j++) {
 		if(!mouseDown) {
 		    points[j].dragged = false;
 		}
 	    }
 	    var alreadyDragged = false;
-	    for(j = 0; j < numPoints; j++) {
+	    for(j = 0; j < num; j++) {
 		if(mouseDown && findDistance(mouseX, mouseY, points[j].x, points[j].y) < 20) {
 		    points[j].dragged = true;
 		}
@@ -101,7 +131,7 @@
 		    points[j].dragged = false;
 		}
 	    }
-	    for(j = 0; j < numPoints; j++) {
+	    for(j = 0; j < num; j++) {
 		if(points[j].dragged) {
 		    if(!alreadyDragged) {
 			alreadyDragged = true;
