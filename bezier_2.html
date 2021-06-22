@@ -39,10 +39,27 @@
 	document.addEventListener('mousedown', onClick, false);
 	document.addEventListener('mouseup', notClick, false);
 
-	for(i = 0; i < num; i++) {
-	    var pointProperties = {x: 50 * i + 20, y: 50, dragged: false}
-	    points.push(pointProperties)
-	}
+	var pointProperties = {x: 20, y: 50, dragged: false}
+	points.push(pointProperties)
+
+	pointProperties = {x: 80, y: 30, dragged: false}
+	points.push(pointProperties)
+
+	pointProperties = {x: 140, y: 30, dragged: false}
+	points.push(pointProperties)
+
+	pointProperties = {x: 200, y: 50, dragged: false}
+	points.push(pointProperties)
+
+	pointProperties = {x: 400, y: 100, dragged: false}
+	points.push(pointProperties)
+
+	pointProperties = {x: 600, y: 50, dragged: false}
+	points.push(pointProperties)
+
+	pointProperties = {x: 400, y: 150, dragged: false}
+	points.push(pointProperties)
+
 	draw();
 
 	function getRndInt(min, max) {
