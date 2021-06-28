@@ -23,14 +23,12 @@
     <h3>Drag the points to change the shape of the Bezier Curve.</h3>
   </head>
   <body>
-    <canvas id="myCanvas" width="960" height="600">
+    <canvas id="myCanvas" width="960" height="840">
       <script>
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 
 	var points = []
-	var num = 7
-	var i;
 	var mouseDown = false;
 	var mouseX = 0
 	var mouseY = 0
@@ -39,26 +37,31 @@
 	document.addEventListener('mousedown', onClick, false);
 	document.addEventListener('mouseup', notClick, false);
 
-	var pointProperties = {x: 20, y: 50, dragged: false}
-	points.push(pointProperties)
+        function xX(x) {
+            return x * 100 + 20
+        }
 
-	pointProperties = {x: 80, y: 30, dragged: false}
-	points.push(pointProperties)
+        function yY(y) {
+            return 540 - y / 10 
+        }
 
-	pointProperties = {x: 140, y: 30, dragged: false}
-	points.push(pointProperties)
-
-	pointProperties = {x: 200, y: 50, dragged: false}
-	points.push(pointProperties)
-
-	pointProperties = {x: 400, y: 100, dragged: false}
-	points.push(pointProperties)
-
-	pointProperties = {x: 600, y: 50, dragged: false}
-	points.push(pointProperties)
-
-	pointProperties = {x: 400, y: 150, dragged: false}
-	points.push(pointProperties)
+	var num = 10  
+        var factx = 0;
+        var facty = 1;  
+        var i;
+        for (i = 0; i < num; i++) {
+            if (i ==1) {
+	        pointProperties = {x: xX(0.23), y: yY(-0.4), dragged: false}
+            } else if (i == 2) {
+	        pointProperties = {x: xX(0.6389), y: yY(0.5), dragged: false}
+            } else {    
+	        var pointProperties = {x: xX(factx),
+                                       y: yY(facty), dragged: false}
+                factx++;
+                facty = facty * factx;
+            }
+	    points.push(pointProperties)
+        }    
 
 	draw();
 
@@ -107,9 +110,12 @@
 		}
 		if(i == 1) {
 		    ctx.fillText("a", points[i].x, points[i].y)
+                    ctx.font = "12px Verdana"
+                    ctx.fillText("control point a: (" + (points[i].x - 20) / 100+ ", " + ((540 - points[i].y) * 10) + ")", 20, 300)
 		}
 		if(i == 2) {
 		    ctx.fillText("b", points[i].x, points[i].y)
+                    ctx.fillText("control point b: (" + (points[i].x -20) / 100 + ", " + ((540 - points[i].y) * 10) + ")", 20, 340)
 		}
 		if(i >= 3) {
 		    ctx.fillText(i - 2, points[i].x, points[i].y)
@@ -125,7 +131,6 @@
 		b2xn = b1x - 4 * b2x + 4 * points[i].x
 		b2yn = b1y - 4 * b2y + 4 * points[i].y
 		drawBezier(points[i].x, points[i].y, b1xn, b1yn, b2xn, b2yn, points[i + 1].x, points[i + 1].y)
-		console.log(i)
 		b1x = b1xn
 		b1y = b1yn
 		b2x = b2xn
