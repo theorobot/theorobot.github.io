@@ -1,0 +1,175 @@
+<html>
+  <head>
+    <title>Rotating Cube</title>
+    <ul>
+      <li>Here, I am rotating a cube</li>
+      <li>My method for determining which sides to show are the following:</li>
+      <li>1. Calculate the normal of each plane. You do this by finding the cross product of the vector that connects point 2 to point 1 and the vector that connects point 1 to point 0.</li>
+      <li>2. Take the vector from point 1 to the camera position and take the dot product of that with the normal. If this number is less than 0, then show that face but if it is greater than or equal to zero, do not show it.</li>
+      <li>You can look at the code and math by right clicking then clicking inspect of press ctrl+shift+I</li>
+    </ul>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="720" height="480">
+      <script>
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+
+	var points = [];
+	var faces = []
+	var screenPositions = []
+	var i;
+	var time = 0
+	var cameraPosition = {x: -10, y: 5, z: 5}
+	var stop = false
+	document.addEventListener('click', onclick, false)
+
+	points.push({x: -1, y: -1, z: 1});
+	points.push({x: 1, y: -1, z: 1});
+	points.push({x: 1, y: 1, z: 1});
+	points.push({x: -1, y: 1, z: 1});
+	points.push({x: 1, y: -1, z: -1});
+	points.push({x: 1, y: 1, z: -1});
+	points.push({x: -1, y: 1, z: -1});
+	points.push({x: -1, y: -1, z: -1});
+
+	function resetFaces() {
+	    faces.push([0, 1, 2, 3]) //Front
+	    faces.push([1, 4, 5, 2]) //Right
+	    faces.push([4, 7, 6, 5]) //Back
+	    faces.push([7, 0, 3, 6]) //Left
+	    faces.push([3, 2, 5, 6]) //Top
+	    faces.push([7, 4, 1, 0]) //Bottom
+	}
+
+	main()
+
+	function vertexToPixel(x, y, z) {
+	    return([toPixelx(worldToScreen(x, y, z).x), toPixely(worldToScreen(x, y, z).y)])
+	}
+
+	function crossProduct(vec1, vec2) {
+	    return {x: vec1.y * vec2.z - vec1.z * vec2.y, y: -(vec1.x * vec2.z - vec1.z * vec2.x),
+		    z: vec1.x * vec2.y - vec1.y * vec2.x}
+	}
+
+	function dotProduct(vec1, vec2) {
+	    return(vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z)
+	}
+
+	function subtract(vec1, vec2) {
+	    var newVec = {x: vec1.x - vec2.x, y: vec1.y - vec2.y, z: vec1.z - vec2.z}
+	    return(newVec)
+	}
+
+	function drawQuad(p, color) {  // takes in an array of 4 points
+	    var q = []
+	    for (k = 0; k < 4 ; k++) {
+		q.push(worldToScreen(p[k].x, p[k].y, p[k].z))
+	    }
+	    ctx.beginPath()
+	    ctx.moveTo(toPixelx(q[0].x), toPixely(q[0].y))
+	    ctx.lineTo(toPixelx(q[1].x), toPixely(q[1].y))
+	    ctx.lineTo(toPixelx(q[2].x), toPixely(q[2].y))
+	    ctx.lineTo(toPixelx(q[3].x), toPixely(q[3].y))
+	    ctx.fillStyle = color
+	    ctx.fill()
+	    ctx.closePath()
+	}
+
+	function worldToScreen(x, y, z) {
+            var a = 0.5145 * x + 0.8575 * z
+	    var b = 0.2782 * x + 0.9459 * y - 0.1669 * z
+	    var c = -0.8111 * x + 0.3244 * y + 0.4867 * z - 6.1644
+	    var p = {x: -a / c, y: -b / c}
+	    return(p)
+	}
+	
+	function drawLine(x1, y1, x2, y2, width) {
+	    ctx.beginPath()
+	    ctx.lineWidth = width
+	    ctx.moveTo(x1, y1)
+	    ctx.lineTo(x2, y2)
+	    ctx.stroke();
+	    ctx.closePath();
+	}
+
+	function toPixelx(x) {
+	    return (canvas.width / 2 + x * 400)
+	}
+
+	function toPixely(y) {
+	    return(canvas.height / 2 + (-y) * 400)
+	}
+
+	function rotatex(Rx, Ry, Rz, theta) {
+	    var pointx = {x: Rx, y: ((Math.cos(theta) * Ry) - (Math.sin(theta)) * Rz), z: ((Math.sin(theta) * Ry) + (Math.cos(theta) * Rz))}
+	    return(pointx)
+	}
+
+	function rotatey(Rx, Ry, Rz, theta) {
+	    var pointy = {x: ((Math.cos(theta) * Rx) + (Math.sin(theta) * Rz)), y: Ry, z:((-(Math.sin(theta)) * Rx) + (Math.cos(theta) * Rz))}
+	    return(pointy)
+	}
+
+	function rotatez(Rx, Ry, Rz, theta) {
+	    var pointz = {x: ((Math.cos(theta) * Rx) - ((Math.sin(theta)) * Ry)), y: (((Math.sin(theta)) * Rx) + ((Math.cos(theta)) * Ry)), z: Rz}
+	    return(pointz)
+	}
+
+	function drawCube() {
+	    var point1 = []
+	    
+	    for(i = 0; i < 8; i++) {
+		point1.push(worldToScreen(points[i].x, points[i].y, points[i].z))
+	    }
+	    for(i = 0; i < 7; i++) {
+		if(!(i == 3)) {
+		    drawLine(toPixelx(point1[i].x), toPixely(point1[i].y), toPixelx(point1[i + 1].x), toPixely(point1[i + 1].y), 1)
+		}
+	    }
+	    for(i = 0; i < 2; i++) {
+		drawLine(toPixelx(point1[i * 4].x), toPixely(point1[i * 4].y), toPixelx(point1[i * 4 + 3].x), toPixely(point1[i * 4 + 3].y), 1)
+	    }
+	    drawLine(toPixelx(point1[0].x), toPixely(point1[0].y), toPixelx(point1[7].x), toPixely(point1[7].y), 1)
+	    drawLine(toPixelx(point1[1].x), toPixely(point1[1].y), toPixelx(point1[4].x), toPixely(point1[4].y), 1)
+	    drawLine(toPixelx(point1[3].x), toPixely(point1[3].y), toPixelx(point1[6].x), toPixely(point1[6].y), 1)
+	    drawLine(toPixelx(point1[2].x), toPixely(point1[2].y), toPixelx(point1[5].x), toPixely(point1[5].y), 1)
+	}
+
+	function main() {
+	    resetFaces()
+	    ctx.clearRect(0, 0, canvas.width, canvas.height)
+	    drawCube()
+	    time += 1
+
+	    var colors = ["rgb(255, 0, 0)", "rgb(0, 255, 0)", "rgb(0, 0, 255)", "rgb(255, 112, 0)", "rgb(75, 0, 130)", "rgb(219, 112, 147)"]
+
+	    for(i = 0; i < 6; i++) {
+		var face = [points[faces[i][0]], points[faces[i][1]], points[faces[i][2]], points[faces[i][3]]]
+		var normal = crossProduct(subtract(face[1], face[0]), subtract(face[3], face[0]))
+		var d =  dotProduct(subtract(cameraPosition, face[1]), normal)
+		console.log(d)
+		if(d > 0) {
+		    drawQuad(face, colors[i])
+		}
+	    }
+	    
+	    for(i = 0; i < 8; i++) {
+		points[i] = rotatex(points[i].x, points[i].y, points[i].z, 0.0174533)
+		points[i] = rotatey(points[i].x, points[i].y, points[i].z, 0.0174533)
+		points[i] = rotatez(points[i].x, points[i].y, points[i].z, 0.0174533)
+	    }
+	    if(!stop) {
+		window.requestAnimationFrame(main)
+	    }
+	}
+
+	function onclick(event) {
+	    stop = !stop
+	}
+	    
+      </script>
+    </canvas>
+  </body>
+</html>
