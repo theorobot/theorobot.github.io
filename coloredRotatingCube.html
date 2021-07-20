@@ -149,7 +149,6 @@
 		var face = [points[faces[i][0]], points[faces[i][1]], points[faces[i][2]], points[faces[i][3]]]
 		var normal = crossProduct(subtract(face[1], face[0]), subtract(face[3], face[0]))
 		var d =  dotProduct(subtract(cameraPosition, face[1]), normal)
-		console.log(d)
 		if(d > 0) {
 		    drawQuad(face, colors[i])
 		}
